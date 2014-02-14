@@ -5,7 +5,7 @@ CompositeField for Django Models
 This is an implementation of a CompositeField for Django. Composite fields
 can be used to group fields together and reuse their definitions.
 
-Example:
+Example::
 
     class CoordField(CompositeField):
         x = models.FloatField()
