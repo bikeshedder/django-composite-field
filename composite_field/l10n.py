@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.conf import settings 
 from django.db.models.fields import Field, CharField, TextField, FloatField
 from django.utils.functional import lazy
+from django.utils import six
 
 from . import CompositeField
 
@@ -27,7 +28,7 @@ class LocalizedField(CompositeField):
             # verbose_name must be lazy in order for the admin to show the
             # translated verbose_names of the fields
             self[language].verbose_name = lazy(lambda language: u'%s (%s)' % (
-                    self.verbose_name, language), unicode)(language)
+                    self.verbose_name, language), six.text_type)(language)
         super(LocalizedField, self).contribute_to_class(cls, field_name)
 
     def get_proxy(self, model):
@@ -35,8 +36,8 @@ class LocalizedField(CompositeField):
 
     class Proxy(CompositeField.Proxy):
 
-        def __nonzero__(self):
-            return bool(unicode(self))
+        def __bool__(self):
+            return bool(six.text_type(self))
 
         def __unicode__(self):
             from django.utils.translation import get_language

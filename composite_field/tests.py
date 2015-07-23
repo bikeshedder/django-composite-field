@@ -27,32 +27,32 @@ class CompositeFieldTestCase(unittest.TestCase):
 
     def test_repr(self):
         place = Place(coord_x=12.0, coord_y=42.0)
-        self.assertEquals(repr(place.coord), 'CoordField(x=12.0, y=42.0)')
+        self.assertEqual(repr(place.coord), 'CoordField(x=12.0, y=42.0)')
 
     def test_cmp(self):
         place1 = Place(coord_x=12.0, coord_y=42.0)
         place2 = Place(coord_x=42.0, coord_y=12.0)
-        self.assertNotEquals(place1.coord, place2.coord)
+        self.assertNotEqual(place1.coord, place2.coord)
         place2.coord.x = 12.0
         place2.coord.y = 42.0
-        self.assertEquals(place1.coord, place2.coord)
+        self.assertEqual(place1.coord, place2.coord)
 
     def test_assign(self):
         place1 = Place(coord_x=12.0, coord_y=42.0)
         place2 = Place()
         place2.coord = place1.coord
-        self.assertEquals(place1.coord, place2.coord)
+        self.assertEqual(place1.coord, place2.coord)
         place2 = Place(coord=place1.coord)
-        self.assertEquals(place1.coord, place2.coord)
+        self.assertEqual(place1.coord, place2.coord)
 
     def test_setattr(self):
         place = Place()
         place.coord.x = 12.0
         place.coord.y = 42.0
-        self.assertEquals(place.coord_x, 12.0)
-        self.assertEquals(place.coord_y, 42.0)
-        self.assertEquals(place.coord.x, 12.0)
-        self.assertEquals(place.coord.y, 42.0)
+        self.assertEqual(place.coord_x, 12.0)
+        self.assertEqual(place.coord_y, 42.0)
+        self.assertEqual(place.coord.x, 12.0)
+        self.assertEqual(place.coord.y, 42.0)
 
     def test_field_order(self):
         fields = Place._meta.fields
@@ -86,11 +86,11 @@ class LocalizedFieldTestCase(unittest.TestCase):
 
     def test_general(self):
         foo = LocalizedFoo()
-        self.assertEquals(len(LocalizedFoo._meta.fields), 3)
+        self.assertEqual(len(LocalizedFoo._meta.fields), 3)
         foo.name_de = 'Mr.'
         foo.name_en = 'Herr'
-        self.assertEquals(foo.name.de, 'Mr.')
-        self.assertEquals(foo.name.en, 'Herr')
+        self.assertEqual(foo.name.de, 'Mr.')
+        self.assertEqual(foo.name.en, 'Herr')
 
 
 class ComplexTuple(models.Model):
@@ -108,66 +108,66 @@ class ComplexFieldTestCase(unittest.TestCase):
     def test_attributes(self):
         t = ComplexTuple()
         get_field = t._meta.get_field
-        self.assertEquals(get_field('x_real').blank, True)
-        self.assertEquals(get_field('x_real').null, True)
-        self.assertEquals(get_field('x_imag').blank, True)
-        self.assertEquals(get_field('x_imag').null, True)
-        self.assertEquals(get_field('y_real').blank, False)
-        self.assertEquals(get_field('y_real').null, False)
-        self.assertEquals(get_field('y_imag').blank, False)
-        self.assertEquals(get_field('y_imag').null, False)
-        self.assertEquals(get_field('z_real').blank, False)
-        self.assertEquals(get_field('z_real').null, False)
-        self.assertEquals(get_field('z_imag').blank, False)
-        self.assertEquals(get_field('z_imag').null, False)
+        self.assertEqual(get_field('x_real').blank, True)
+        self.assertEqual(get_field('x_real').null, True)
+        self.assertEqual(get_field('x_imag').blank, True)
+        self.assertEqual(get_field('x_imag').null, True)
+        self.assertEqual(get_field('y_real').blank, False)
+        self.assertEqual(get_field('y_real').null, False)
+        self.assertEqual(get_field('y_imag').blank, False)
+        self.assertEqual(get_field('y_imag').null, False)
+        self.assertEqual(get_field('z_real').blank, False)
+        self.assertEqual(get_field('z_real').null, False)
+        self.assertEqual(get_field('z_imag').blank, False)
+        self.assertEqual(get_field('z_imag').null, False)
 
     def test_null(self):
         t = ComplexTuple()
-        self.assertEquals(t.x, None)
-        self.assertEquals(t.y, None)
-        self.assertEquals(t.y, None)
+        self.assertEqual(t.x, None)
+        self.assertEqual(t.y, None)
+        self.assertEqual(t.y, None)
         t.x = None
         t.y = None
         t.z = None
-        self.assertEquals(t.x, None)
-        self.assertEquals(t.y, None)
-        self.assertEquals(t.y, None)
+        self.assertEqual(t.x, None)
+        self.assertEqual(t.y, None)
+        self.assertEqual(t.y, None)
 
     def test_assignment(self):
         t = ComplexTuple(x=42, y=42j, z=42+42j)
-        self.assertEquals(t.x, 42)
-        self.assertEquals(t.y, 42j)
-        self.assertEquals(t.z, 42+42j)
+        self.assertEqual(t.x, 42)
+        self.assertEqual(t.y, 42j)
+        self.assertEqual(t.z, 42+42j)
         t.x = complex(21, 0)
-        self.assertEquals(t.x, 21)
+        self.assertEqual(t.x, 21)
         t.y = complex(0, 21)
-        self.assertEquals(t.y, 21j)
+        self.assertEqual(t.y, 21j)
         t.z = complex(21, 21)
-        self.assertEquals(t.z, 21+21j)
+        self.assertEqual(t.z, 21+21j)
 
     def test_calculation(self):
         t = ComplexTuple(x=1, y=1j)
         t.z = t.x * t.y
-        self.assertEquals(t.z, 1j)
+        self.assertEqual(t.z, 1j)
         t.y *= t.y
-        self.assertEquals(t.y, -1)
+        self.assertEqual(t.y, -1)
         t.z = t.x * t.y
-        self.assertEquals(t.x, 1)
-        self.assertEquals(t.y, -1)
-        self.assertEquals(t.z, -1)
+        self.assertEqual(t.x, 1)
+        self.assertEqual(t.y, -1)
+        self.assertEqual(t.z, -1)
 
     def test_defaults(self):
         t = ComplexTupleWithDefaults()
-        self.assertEquals(t.x, None)
-        self.assertEquals(t.y, 42)
-        self.assertEquals(t.z, 42j)
+        self.assertEqual(t.x, None)
+        self.assertEqual(t.y, 42)
+        self.assertEqual(t.z, 42j)
 
     def test_verbose_name(self):
         t = ComplexTuple()
         get_field = t._meta.get_field
-        self.assertEquals(get_field('x_real').verbose_name, 'Re(x)')
-        self.assertEquals(get_field('x_imag').verbose_name, 'Im(x)')
-        self.assertEquals(get_field('y_real').verbose_name, 'Re(Y)')
-        self.assertEquals(get_field('y_imag').verbose_name, 'Im(Y)')
-        self.assertEquals(get_field('z_real').verbose_name, 'Re(gamma)')
-        self.assertEquals(get_field('z_imag').verbose_name, 'Im(gamma)')
+        self.assertEqual(get_field('x_real').verbose_name, 'Re(x)')
+        self.assertEqual(get_field('x_imag').verbose_name, 'Im(x)')
+        self.assertEqual(get_field('y_real').verbose_name, 'Re(Y)')
+        self.assertEqual(get_field('y_imag').verbose_name, 'Im(Y)')
+        self.assertEqual(get_field('z_real').verbose_name, 'Re(gamma)')
+        self.assertEqual(get_field('z_imag').verbose_name, 'Im(gamma)')

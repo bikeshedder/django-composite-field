@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from django.db.models.fields import Field
 from django.utils.datastructures import SortedDict
+from django.utils import six
 
 
 class CompositeFieldBase(type):
@@ -15,7 +16,7 @@ class CompositeFieldBase(type):
 
         # Prepare attributes.
         fields = []
-        for field_name, field in attrs.items():
+        for field_name, field in list(attrs.items()):
             if hasattr(field, 'contribute_to_class'):
                 fields.append((field_name, field))
                 del attrs[field_name]
@@ -27,14 +28,13 @@ class CompositeFieldBase(type):
         return new_class
 
 
+@six.add_metaclass(CompositeFieldBase)
 class CompositeField(object):
-    __metaclass__ = CompositeFieldBase
-
     def contribute_to_class(self, cls, field_name):
         self.field_name = field_name
         if self.prefix is None:
             self.prefix = '%s_' % field_name
-        for subfield_name, subfield in self.subfields.iteritems():
+        for subfield_name, subfield in six.iteritems(self.subfields):
             name = self.prefix + subfield_name
             if hasattr(cls, name):
                 raise RuntimeError('contribute_to_class for %s.%s failed due to ' \
@@ -45,7 +45,7 @@ class CompositeField(object):
     def __init__(self, prefix=None):
         self.prefix = prefix
         self.subfields = deepcopy(self.subfields)
-        for subfield in self.subfields.itervalues():
+        for subfield in six.itervalues(self.subfields):
             subfield.creation_counter = Field.creation_counter
             Field.creation_counter += 1
 
@@ -59,7 +59,7 @@ class CompositeField(object):
         return name in self.subfields
 
     def __iter__(self):
-        return self.subfields.iterkeys()
+        return six.iterkeys(self.subfields)
 
     def get_proxy(self, model):
         return CompositeField.Proxy(self, model)
@@ -93,13 +93,13 @@ class CompositeField(object):
         def __getattr__(self, name):
             return getattr(self._model, self._subfield_name(name))
 
-        def __cmp__(self, another):
-            for name in self._composite_field:
-                pred = cmp(getattr(self, name),
-                         getattr(another, name))
-                if pred != 0:
-                    return pred
-            return 0
+        def __eq__(self, other):
+            attrs_eq = [getattr(self, f) == getattr(other, f) for f in
+                        self._composite_field]
+            return isinstance(other, self.__class__) and all(attrs_eq)
+
+        def __ne__(self, other):
+            return not self.__eq__(other)
 
         def __repr__(self):
             fields = ', '.join(
