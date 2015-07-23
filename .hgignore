@@ -1,8 +1,0 @@
-syntax: glob
-*.pyc
-build
-dist
-MANIFEST
-_build
-_static
-.tox

@@ -1,0 +1,27 @@
+# binary (compiled) files
+*.o
+#*.mo
+*.py[co]
+
+# OSX specific junk
+.DS_Store
+
+# Windows specific junk
+[Dd]esktop.ini
+[Tt]humbs.db
+
+# editor files
+*.swp
+*.orig
+*~
+\#*
+.\#*
+
+# Old files and backup stuff
+*.old
+*.bak
+
+# build
+/build
+/dist
+/django-composite-field.egg-info
