@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='django-composite-field',
-      version='0.1',
+      version='0.2',
       description='CompositeField implementation for Django',
       keywords='django composite field',
       author='Michael P. Jung',
