@@ -1,7 +1,7 @@
+from collections import OrderedDict
 from copy import deepcopy
 
 from django.db.models.fields import Field
-from django.utils.datastructures import SortedDict
 from django.utils import six
 
 
@@ -21,7 +21,7 @@ class CompositeFieldBase(type):
                 fields.append((field_name, field))
                 del attrs[field_name]
         fields.sort(key=lambda x: x[1].creation_counter)
-        attrs['subfields'] = SortedDict(fields)
+        attrs['subfields'] = OrderedDict(fields)
 
         # Create the class.
         new_class = super_new(cls, name, bases, attrs)
