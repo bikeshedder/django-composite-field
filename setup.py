@@ -21,7 +21,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
 
 setup(
     name='django-composite-field',
-    version='0.2',
+    version='0.3',
     description='CompositeField implementation for Django',
     long_description=read('README'),
     author='Michael P. Jung',
