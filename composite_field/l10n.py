@@ -13,13 +13,14 @@ LANGUAGES = map(lambda lang: lang[0], getattr(settings, 'LANGUAGES', ()))
 
 class LocalizedField(CompositeField):
 
-    def __init__(self, field_class, languages=LANGUAGES, **kwargs):
+    def __init__(self, field_class, *args, **kwargs):
+        languages = kwargs.pop('languages', LANGUAGES)
         if not languages:
             raise RuntimeError('Set LANGUAGES in your settings.py or pass a non empty "languages" argument before using LocalizedCharField')
         super(LocalizedField, self).__init__()
         self.verbose_name = kwargs.pop('verbose_name', None)
         for language in languages:
-            self[language] = field_class(**kwargs)
+            self[language] = field_class(*args, **kwargs)
 
     def contribute_to_class(self, cls, field_name):
         if self.verbose_name is None:
@@ -63,11 +64,11 @@ class LocalizedField(CompositeField):
 
 class LocalizedCharField(LocalizedField):
 
-    def __init__(self, **kwargs):
-        super(LocalizedCharField, self).__init__(CharField, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(LocalizedCharField, self).__init__(CharField, *args, **kwargs)
 
 
 class LocalizedTextField(LocalizedField):
 
-    def __init__(self, **kwargs):
-        super(LocalizedTextField, self).__init__(TextField, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(LocalizedTextField, self).__init__(TextField, *args, **kwargs)
