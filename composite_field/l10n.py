@@ -14,13 +14,19 @@ LANGUAGES = map(lambda lang: lang[0], getattr(settings, 'LANGUAGES', ()))
 class LocalizedField(CompositeField):
 
     def __init__(self, field_class, *args, **kwargs):
-        languages = kwargs.pop('languages', LANGUAGES)
-        if not languages:
+        self.languages = kwargs.pop('languages', LANGUAGES)
+        if not self.languages:
             raise RuntimeError('Set LANGUAGES in your settings.py or pass a non empty "languages" argument before using LocalizedCharField')
         super(LocalizedField, self).__init__()
         self.verbose_name = kwargs.pop('verbose_name', None)
-        for language in languages:
+        for language in self.languages:
             self[language] = field_class(*args, **kwargs)
+
+    def __getattr__(self, name):
+        # Proxy all other getattr calls to the first language field. This makes
+        # it possible to access subfield specific details like 'max_length',
+        # 'blank', etc. without duplication.
+        return getattr(self[self.languages[0]], name)
 
     def contribute_to_class(self, cls, field_name):
         if self.verbose_name is None:
@@ -28,8 +34,7 @@ class LocalizedField(CompositeField):
         for language in self:
             # verbose_name must be lazy in order for the admin to show the
             # translated verbose_names of the fields
-            self[language].verbose_name = lazy(lambda language: u'%s (%s)' % (
-                    self.verbose_name, language), six.text_type)(language)
+            self[language].verbose_name = lazy(lambda language: self.verbose_name + ' (' + language + ')', six.text_type)(language)
         super(LocalizedField, self).contribute_to_class(cls, field_name)
 
     def get_proxy(self, model):
