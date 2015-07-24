@@ -30,21 +30,37 @@ class CompositeFieldBase(type):
 
 @six.add_metaclass(CompositeFieldBase)
 class CompositeField(object):
-    def contribute_to_class(self, cls, field_name):
-        self.field_name = field_name
+    is_relation = False
+    concrete = False
+    column = None
+    rel = None
+
+    def contribute_to_class(self, cls, name):
+        self.name = name
+        self.field_name = name
+        self.attname = name
         if self.prefix is None:
-            self.prefix = '%s_' % field_name
+            self.prefix = '%s_' % name
         for subfield_name, subfield in six.iteritems(self.subfields):
-            name = self.prefix + subfield_name
             if hasattr(cls, name):
-                raise RuntimeError('contribute_to_class for %s.%s failed due to ' \
-                        'duplicate field name %s' % (cls.__name__, field_name, name))
-            subfield.contribute_to_class(cls, name)
-        setattr(cls, field_name, property(self.get, self.set))
+                raise RuntimeError('contribute_to_class for %s.%s%s failed due to ' \
+                        'duplicate field name %s' % (cls.__name__, self.prefix, name, subfield_name))
+            subfield.contribute_to_class(cls, self.prefix + subfield_name)
+        setattr(cls, name, property(self.get, self.set))
+        # FIXME this does not work, yet. I want to be able to access the composite
+        # field via model._meta. But doing so causes a clashing field error in the
+        # django check.
+        #if hasattr(cls._meta, 'add_virtual_field'):
+        #    # Django < 1.8
+        #    cls._meta.add_virtual_field(self)
+        #else:
+        #    cls._meta.add_field(self, virtual=True)
 
     def __init__(self, prefix=None):
         self.prefix = prefix
         self.subfields = deepcopy(self.subfields)
+        self.creation_counter = Field.creation_counter
+        Field.creation_counter += 1
         for subfield in six.itervalues(self.subfields):
             subfield.creation_counter = Field.creation_counter
             Field.creation_counter += 1

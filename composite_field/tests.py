@@ -1,6 +1,8 @@
 import unittest
 
+import django
 from django.db import models
+from django.utils.encoding import force_text
 
 from . import CompositeField
 from . import LocalizedCharField
@@ -86,11 +88,22 @@ class LocalizedFieldTestCase(unittest.TestCase):
 
     def test_general(self):
         foo = LocalizedFoo()
-        self.assertEqual(len(LocalizedFoo._meta.fields), 3)
+        # The behavior changed from Django >= 1.8 and virtual
+        # fields are now part of the fields list. Therefore this
+        # assertion will fail for Django < 1.8.
+        #self.assertEqual(len(LocalizedFoo._meta.fields), 4)
         foo.name_de = 'Mr.'
         foo.name_en = 'Herr'
         self.assertEqual(foo.name.de, 'Mr.')
         self.assertEqual(foo.name.en, 'Herr')
+
+    def test_verbose_name(self):
+        foo = LocalizedFoo()
+        get_field = foo._meta.get_field
+        # FIXME this does not work, yet.
+        #self.assertEqual(force_text(get_field('name').verbose_name), 'name')
+        self.assertEqual(force_text(get_field('name_de').verbose_name), 'name (de)')
+        self.assertEqual(force_text(get_field('name_en').verbose_name), 'name (en)')
 
 
 class ComplexTuple(models.Model):
@@ -171,3 +184,34 @@ class ComplexFieldTestCase(unittest.TestCase):
         self.assertEqual(get_field('y_imag').verbose_name, 'Im(Y)')
         self.assertEqual(get_field('z_real').verbose_name, 'Re(gamma)')
         self.assertEqual(get_field('z_imag').verbose_name, 'Im(gamma)')
+
+
+class TranslatedBase(models.Model):
+    name = LocalizedCharField(languages=('de', 'en'), max_length=50)
+
+    class Meta:
+        abstract = True
+
+class TranslatedModelA(TranslatedBase):
+    pass
+
+class TranslatedModelB(TranslatedBase):
+    pass
+
+class TranslatedBaseModelTestCase(unittest.TestCase):
+
+    def test_field(self):
+        a = TranslatedModelA()
+        b = TranslatedModelB()
+
+
+class RunChecksTestCase(unittest.TestCase):
+
+    @unittest.skipIf(django.VERSION <= (1, 7), 'checks were introduced in Django 1.7+')
+    def test_checks(self):
+        django.setup()
+        from django.core import checks
+        all_issues = checks.run_checks()
+        errors = [str(e) for e in all_issues if e.level >= checks.ERROR]
+        if errors:
+            self.fail('checks failed:\n' + '\n'.join(errors))
