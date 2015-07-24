@@ -42,7 +42,7 @@ class CompositeField(object):
         if self.prefix is None:
             self.prefix = '%s_' % name
         for subfield_name, subfield in six.iteritems(self.subfields):
-            if hasattr(cls, name):
+            if hasattr(cls, self.prefix + subfield_name):
                 raise RuntimeError('contribute_to_class for %s.%s%s failed due to ' \
                         'duplicate field name %s' % (cls.__name__, self.prefix, name, subfield_name))
             subfield.contribute_to_class(cls, self.prefix + subfield_name)
