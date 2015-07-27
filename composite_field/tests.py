@@ -88,10 +88,14 @@ class LocalizedFieldTestCase(unittest.TestCase):
 
     def test_general(self):
         foo = LocalizedFoo()
+        # XXX Enable this test once the virtual field is added.
         # The behavior changed from Django >= 1.8 and virtual
-        # fields are now part of the fields list. Therefore this
-        # assertion will fail for Django < 1.8.
-        #self.assertEqual(len(LocalizedFoo._meta.fields), 4)
+        # fields are now part of the fields list.
+        #if django.VERSION >= (1, 8):
+        #    self.assertEqual(len(LocalizedFoo._meta.fields), 4)
+        #else:
+        #    self.assertEqual(len(LocalizedFoo._meta.fields), 3)
+        self.assertEqual(len(LocalizedFoo._meta.fields), 3)
         foo.name_de = 'Mr.'
         foo.name_en = 'Herr'
         self.assertEqual(foo.name.de, 'Mr.')
@@ -100,10 +104,15 @@ class LocalizedFieldTestCase(unittest.TestCase):
     def test_verbose_name(self):
         foo = LocalizedFoo()
         get_field = foo._meta.get_field
-        # FIXME this does not work, yet.
-        #self.assertEqual(force_text(get_field('name').verbose_name), 'name')
         self.assertEqual(force_text(get_field('name_de').verbose_name), 'name (de)')
         self.assertEqual(force_text(get_field('name_en').verbose_name), 'name (en)')
+
+    # XXX Enable this test once the virtual field is added.
+    #@unittest.skipIf(django.VERSION <= (1, 8), 'get_fields returns virtual fields since Django 1.8')
+    #def test_verbose_name_1_8(self):
+    #    foo = LocalizedFoo()
+    #    get_field = foo._meta.get_field
+    #    self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
 
 class ComplexTuple(models.Model):
@@ -186,23 +195,59 @@ class ComplexFieldTestCase(unittest.TestCase):
         self.assertEqual(get_field('z_imag').verbose_name, 'Im(gamma)')
 
 
-class TranslatedBase(models.Model):
+class TranslatedAbstractBase(models.Model):
     name = LocalizedCharField(languages=('de', 'en'), max_length=50)
 
     class Meta:
         abstract = True
 
-class TranslatedModelA(TranslatedBase):
+class TranslatedModelA(TranslatedAbstractBase):
     pass
 
-class TranslatedModelB(TranslatedBase):
+class TranslatedModelB(TranslatedAbstractBase):
     pass
 
-class TranslatedBaseModelTestCase(unittest.TestCase):
+class TranslatedNonAbstractBase(models.Model):
+    name = LocalizedCharField(languages=('de', 'en'), max_length=50)
 
-    def test_field(self):
-        a = TranslatedModelA()
-        b = TranslatedModelB()
+    class Meta:
+        abstract = False
+
+class TranslatedModelC(TranslatedNonAbstractBase):
+    pass
+
+class TranslatedModelD(TranslatedNonAbstractBase):
+    pass
+
+class InheritanceTestCase(unittest.TestCase):
+
+    def test_abstract_inheritance(self):
+        a = TranslatedModelA(name_de='Max Mustermann', name_en='John Doe')
+        b = TranslatedModelB(name_en='Petra Musterfrau', name='Jane Doe')
+        get_a_field = a._meta.get_field
+        get_b_field = b._meta.get_field
+        #if django.VERSION >= (1, 8):
+        #    self.assertIs(get_a_field('name').model, TranslatedModelA)
+        self.assertIs(get_a_field('name_de').model, TranslatedModelA)
+        self.assertIs(get_a_field('name_en').model, TranslatedModelA)
+        #if django.VERSION >= (1, 8):
+        #    self.assertIs(get_b_field('name').model, TranslatedModelB)
+        self.assertIs(get_b_field('name_de').model, TranslatedModelB)
+        self.assertIs(get_b_field('name_en').model, TranslatedModelB)
+
+    def test_non_abstract_inheritance(self):
+        c = TranslatedModelC(name_de='Max Mustermann', name_en='John Doe')
+        d = TranslatedModelD(name_en='Petra Musterfrau', name='Jane Doe')
+        get_c_field = c._meta.get_field
+        get_d_field = d._meta.get_field
+        #if django.VERSION >= (1, 8):
+        #    self.assertIs(get_c_field('name').model, TranslatedNonAbstractBase)
+        self.assertIs(get_c_field('name_de').model, TranslatedNonAbstractBase)
+        self.assertIs(get_c_field('name_en').model, TranslatedNonAbstractBase)
+        #if django.VERSION >= (1, 8):
+        #    self.assertIs(get_d_field('name').model, TranslatedNonAbstractBase)
+        self.assertIs(get_d_field('name_de').model, TranslatedNonAbstractBase)
+        self.assertIs(get_d_field('name_en').model, TranslatedNonAbstractBase)
 
 
 class RunChecksTestCase(unittest.TestCase):

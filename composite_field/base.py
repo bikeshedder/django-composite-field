@@ -36,6 +36,7 @@ class CompositeField(object):
     rel = None
 
     def contribute_to_class(self, cls, name):
+        self.model = cls
         self.name = name
         self.field_name = name
         self.attname = name
@@ -47,9 +48,9 @@ class CompositeField(object):
                         'duplicate field name %s' % (cls.__name__, self.prefix, name, subfield_name))
             subfield.contribute_to_class(cls, self.prefix + subfield_name)
         setattr(cls, name, property(self.get, self.set))
-        # FIXME this does not work, yet. I want to be able to access the composite
-        # field via model._meta. But doing so causes a clashing field error in the
-        # django check.
+        # XXX Once adding this field as virtual field to the class
+        # the subfields are added twice to the model. The reason
+        # for this remains unknown for now.
         #if hasattr(cls._meta, 'add_virtual_field'):
         #    # Django < 1.8
         #    cls._meta.add_virtual_field(self)
