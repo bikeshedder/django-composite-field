@@ -223,7 +223,7 @@ class InheritanceTestCase(unittest.TestCase):
 
     def test_abstract_inheritance(self):
         a = TranslatedModelA(name_de='Max Mustermann', name_en='John Doe')
-        b = TranslatedModelB(name_en='Petra Musterfrau', name='Jane Doe')
+        b = TranslatedModelB(name_en='Petra Musterfrau', name_de='Jane Doe')
         get_a_field = a._meta.get_field
         get_b_field = b._meta.get_field
         #if django.VERSION >= (1, 8):
@@ -237,7 +237,7 @@ class InheritanceTestCase(unittest.TestCase):
 
     def test_non_abstract_inheritance(self):
         c = TranslatedModelC(name_de='Max Mustermann', name_en='John Doe')
-        d = TranslatedModelD(name_en='Petra Musterfrau', name='Jane Doe')
+        d = TranslatedModelD(name_en='Petra Musterfrau', name_de='Jane Doe')
         get_c_field = c._meta.get_field
         get_d_field = d._meta.get_field
         #if django.VERSION >= (1, 8):
