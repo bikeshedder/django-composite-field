@@ -48,14 +48,11 @@ class CompositeField(object):
                         'duplicate field name %s' % (cls.__name__, self.prefix, name, subfield_name))
             subfield.contribute_to_class(cls, self.prefix + subfield_name)
         setattr(cls, name, property(self.get, self.set))
-        # XXX Once adding this field as virtual field to the class
-        # the subfields are added twice to the model. The reason
-        # for this remains unknown for now.
-        #if hasattr(cls._meta, 'add_virtual_field'):
-        #    # Django < 1.8
-        #    cls._meta.add_virtual_field(self)
-        #else:
-        #    cls._meta.add_field(self, virtual=True)
+        if hasattr(cls._meta, 'add_virtual_field'):
+            # Django < 1.8
+            cls._meta.add_virtual_field(self)
+        else:
+            cls._meta.add_field(self, virtual=True)
 
     def __init__(self, prefix=None):
         self.prefix = prefix
