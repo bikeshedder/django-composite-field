@@ -19,6 +19,7 @@ class LocalizedField(CompositeField):
             raise RuntimeError('Set LANGUAGES in your settings.py or pass a non empty "languages" argument before using LocalizedCharField')
         super(LocalizedField, self).__init__()
         self.verbose_name = verbose_name
+        kwargs['verbose_name'] = verbose_name
         for language in self.languages:
             self[language] = field_class(*args, **kwargs)
 
