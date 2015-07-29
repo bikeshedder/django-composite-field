@@ -19,3 +19,10 @@ Version 0.4, 2015-07-29
 
   * Python 3.2 compatibility fixed
   * Composite field as virtual field in model
+
+Version 0.5, 2015-07-29
+-----------------------
+
+  * Fix composite proxy __eq__ method when comparing against non composite values
+  * Fix translation fallback
+  * Fix verbose_name as positional argument in LocalizedField
