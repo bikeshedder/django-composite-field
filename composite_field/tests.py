@@ -1,28 +1,17 @@
 import unittest
 
 import django
-from django.db import models
 from django.utils.encoding import force_text
 
-from . import CompositeField
-from . import LocalizedCharField
-from . import ComplexField
-
-
-class CoordField(CompositeField):
-    x = models.FloatField()
-    y = models.FloatField()
-
-
-class Place(models.Model):
-    name = models.CharField(max_length=10)
-    coord = CoordField()
-
-
-class Direction(models.Model):
-    source = CoordField()
-    distance = models.FloatField()
-    target = CoordField()
+from composite_field_test.models import Place
+from composite_field_test.models import Direction
+from composite_field_test.models import LocalizedFoo
+from composite_field_test.models import ComplexTuple
+from composite_field_test.models import ComplexTupleWithDefaults
+from composite_field_test.models import TranslatedModelA
+from composite_field_test.models import TranslatedModelB
+from composite_field_test.models import TranslatedModelC
+from composite_field_test.models import TranslatedModelD
 
 
 class CompositeFieldTestCase(unittest.TestCase):
@@ -79,11 +68,6 @@ class CompositeFieldTestCase(unittest.TestCase):
         self.assertTrue(fields.index(target_x) < fields.index(target_y))
 
 
-class LocalizedFoo(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = LocalizedCharField(languages=('de', 'en'), max_length=50)
-
-
 class LocalizedFieldTestCase(unittest.TestCase):
 
     def test_general(self):
@@ -111,16 +95,6 @@ class LocalizedFieldTestCase(unittest.TestCase):
         get_field = foo._meta.get_field
         self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
-
-class ComplexTuple(models.Model):
-    x = ComplexField(blank=True, null=True)
-    y = ComplexField(blank=False, null=False, verbose_name='Y')
-    z = ComplexField(verbose_name='gamma')
-
-class ComplexTupleWithDefaults(models.Model):
-    x = ComplexField(blank=True, null=True, default=None)
-    y = ComplexField(blank=False, null=False, default=42)
-    z = ComplexField(default=42j)
 
 class ComplexFieldTestCase(unittest.TestCase):
 
@@ -191,30 +165,6 @@ class ComplexFieldTestCase(unittest.TestCase):
         self.assertEqual(get_field('z_real').verbose_name, 'Re(gamma)')
         self.assertEqual(get_field('z_imag').verbose_name, 'Im(gamma)')
 
-
-class TranslatedAbstractBase(models.Model):
-    name = LocalizedCharField(languages=('de', 'en'), max_length=50)
-
-    class Meta:
-        abstract = True
-
-class TranslatedModelA(TranslatedAbstractBase):
-    pass
-
-class TranslatedModelB(TranslatedAbstractBase):
-    pass
-
-class TranslatedNonAbstractBase(models.Model):
-    name = LocalizedCharField(languages=('de', 'en'), max_length=50)
-
-    class Meta:
-        abstract = False
-
-class TranslatedModelC(TranslatedNonAbstractBase):
-    pass
-
-class TranslatedModelD(TranslatedNonAbstractBase):
-    pass
 
 class InheritanceTestCase(unittest.TestCase):
 
