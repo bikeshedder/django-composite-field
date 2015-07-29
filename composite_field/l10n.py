@@ -22,12 +22,6 @@ class LocalizedField(CompositeField):
         for language in self.languages:
             self[language] = field_class(*args, **kwargs)
 
-    def __getattr__(self, name):
-        # Proxy all other getattr calls to the first language field. This makes
-        # it possible to access subfield specific details like 'max_length',
-        # 'blank', etc. without duplication.
-        return getattr(self[self.languages[0]], name)
-
     def contribute_to_class(self, cls, field_name):
         if self.verbose_name is None:
             self.verbose_name = field_name.replace('_', ' ')
