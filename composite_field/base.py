@@ -125,8 +125,11 @@ class CompositeField(object):
             return getattr(self._model, self._subfield_name(name))
 
         def __eq__(self, other):
-            attrs_eq = [getattr(self, f) == getattr(other, f) for f in
-                        self._composite_field]
+            try:
+                attrs_eq = [getattr(self, f) == getattr(other, f) for f in
+                            self._composite_field]
+            except AttributeError:
+                return False
             return isinstance(other, self.__class__) and all(attrs_eq)
 
         def __ne__(self, other):
