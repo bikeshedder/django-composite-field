@@ -45,20 +45,21 @@ class LocalizedField(CompositeField):
             translation = None
             # 1. complete language code
             translation = getattr(self, language, None)
-            if translation is not None:
+            if translation:
                 return translation
             # 2. base of language code
             if '-' in language:
                 base_lang = language.split('-')[0]
                 translation = getattr(self, base_lang, None)
-                if translation is not None:
+                if translation:
                     return translation
             # 3. first available translation
             for language in settings.LANGUAGES:
-                getattr(self, base_lang, None)
-                if translation is not None:
+                base_lang = language[0].split('-')[0]
+                translation = getattr(self, base_lang, None)
+                if translation:
                     return translation
-            return None
+            return ''
 
 
 class LocalizedCharField(LocalizedField):
