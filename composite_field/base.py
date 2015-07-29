@@ -36,18 +36,20 @@ class CompositeField(object):
     rel = None
 
     def contribute_to_class(self, cls, name):
-        self.model = cls
         self.name = name
         self.field_name = name
         self.attname = name
-        if self.prefix is None:
-            self.prefix = '%s_' % name
-        for subfield_name, subfield in six.iteritems(self.subfields):
-            if hasattr(cls, self.prefix + subfield_name):
-                raise RuntimeError('contribute_to_class for %s.%s%s failed due to ' \
-                        'duplicate field name %s' % (cls.__name__, self.prefix, name, subfield_name))
-            subfield.contribute_to_class(cls, self.prefix + subfield_name)
-        setattr(cls, name, property(self.get, self.set))
+        # Only add the subfields for non-abstract models and use the model
+        # attribute to detect non-abstract inheritance. Without this check
+        # the subfields would be added multiple times.
+        if not cls._meta.abstract and not self.model:
+            self.model = cls
+            if self.prefix is None:
+                self.prefix = '%s_' % name
+            for subfield_name, subfield in six.iteritems(self.subfields):
+                subfield_name = self.prefix + subfield_name
+                subfield.contribute_to_class(cls, subfield_name)
+            setattr(cls, name, property(self.get, self.set))
         if hasattr(cls._meta, 'add_virtual_field'):
             # Django < 1.8
             cls._meta.add_virtual_field(self)
@@ -56,6 +58,7 @@ class CompositeField(object):
 
     def __init__(self, prefix=None):
         self.prefix = prefix
+        self.model = None
         self.subfields = deepcopy(self.subfields)
         self.creation_counter = Field.creation_counter
         Field.creation_counter += 1
@@ -74,6 +77,19 @@ class CompositeField(object):
 
     def __iter__(self):
         return six.iterkeys(self.subfields)
+
+    def __eq__(self, other):
+        if isinstance(other, CompositeField):
+            return self.creation_counter == other.creation_counter
+        return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, CompositeField):
+            return self.creation_counter < other.creation_counter
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.creation_counter)
 
     def get_proxy(self, model):
         return CompositeField.Proxy(self, model)

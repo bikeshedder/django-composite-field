@@ -8,8 +8,10 @@ from composite_field_test.models import Direction
 from composite_field_test.models import LocalizedFoo
 from composite_field_test.models import ComplexTuple
 from composite_field_test.models import ComplexTupleWithDefaults
+from composite_field_test.models import TranslatedAbstractBase
 from composite_field_test.models import TranslatedModelA
 from composite_field_test.models import TranslatedModelB
+from composite_field_test.models import TranslatedNonAbstractBase
 from composite_field_test.models import TranslatedModelC
 from composite_field_test.models import TranslatedModelD
 
