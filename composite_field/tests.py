@@ -75,7 +75,7 @@ class CompositeFieldTestCase(unittest.TestCase):
         class DirectionForm(forms.ModelForm):
             class Meta:
                 model = Direction
-                fields = '__all__'
+                exclude = ()
         form = DirectionForm()
         form = DirectionForm({})
         form.is_valid()
