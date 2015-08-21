@@ -2,8 +2,9 @@ from copy import deepcopy
 
 from django.conf import settings 
 from django.db.models.fields import Field, CharField, TextField, FloatField
-from django.utils.functional import lazy
 from django.utils import six
+from django.utils.functional import lazy
+from django.utils.translation import get_language
 
 from . import CompositeField
 
@@ -41,7 +42,28 @@ class LocalizedField(CompositeField):
             return bool(six.text_type(self))
 
         def __unicode__(self):
-            from django.utils.translation import get_language
+            return unicode(self.current_with_fallback)
+
+        def __setattr__(self, name, value):
+            if name == 'current':
+                language = get_language()
+                base_lang = language.split('-')[0]
+                return setattr(self, base_lang, value)
+            if name == 'all':
+                for language in self._composite_field.languages:
+                    setattr(self, language, value)
+                return value
+            else:
+                return super(LocalizedField.Proxy, self).__setattr__(name, value)
+
+        @property
+        def current(self):
+            language = get_language()
+            base_lang = language.split('-')[0]
+            return getattr(self, base_lang)
+
+        @property
+        def current_with_fallback(self):
             language = get_language()
             translation = None
             # 1. complete language code

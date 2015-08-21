@@ -1,6 +1,7 @@
 import unittest
 
 import django
+from django.utils import translation
 from django.utils.encoding import force_text
 
 from composite_field_test.models import Place
@@ -100,6 +101,28 @@ class LocalizedFieldTestCase(unittest.TestCase):
         get_field = foo._meta.get_field
         self.assertEqual(force_text(get_field('name_de').verbose_name), 'name (de)')
         self.assertEqual(force_text(get_field('name_en').verbose_name), 'name (en)')
+
+    def test_get_current(self):
+        foo = LocalizedFoo(name_de='Bier', name_en='Beer')
+        with translation.override('de'):
+            self.assertEqual(foo.name.current, 'Bier')
+        with translation.override('en'):
+            self.assertEqual(foo.name.current, 'Beer')
+
+    def test_set_current(self):
+        foo = LocalizedFoo()
+        with translation.override('de'):
+            foo.name.current = 'Bier'
+        with translation.override('en'):
+            foo.name.current = 'Beer'
+        self.assertEqual(foo.name_de, 'Bier')
+        self.assertEqual(foo.name_en, 'Beer')
+
+    def test_set_all(self):
+        foo = LocalizedFoo()
+        foo.name.all = 'Felix'
+        self.assertEqual(foo.name_de, 'Felix')
+        self.assertEqual(foo.name_en, 'Felix')
 
     @unittest.skipIf(django.VERSION <= (1, 8), 'get_fields returns virtual fields since Django 1.8')
     def test_verbose_name_1_8(self):
