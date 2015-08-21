@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from setuptools import Command
 from setuptools import setup
 
 # Utility function to read the README file.
@@ -17,7 +18,24 @@ try:
 except ImportError:
     pass
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
+class DjangoTestCommand(Command):
+    description = "run unit test using Django management command"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        # Prepare DJANGO_SETTINGS_MODULE and PYTHONPATH
+        import os, sys
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
+        sys.path[0:0] = [os.path.dirname(os.path.dirname(__file__))]
+        # Execute management command 'test'
+        from django.core.management import execute_from_command_line
+        execute_from_command_line(['manage.py', 'test'])
 
 setup(
     name='django-composite-field',
@@ -30,8 +48,10 @@ setup(
     keywords='django composite field',
     url='http://bitbucket.org/bikeshedder/django-composite-field',
     packages=['composite_field'],
-    test_suite='composite_field.tests',
     tests_require=['Django'],
+    cmdclass={
+        'test': DjangoTestCommand,
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

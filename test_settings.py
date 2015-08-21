@@ -7,6 +7,8 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE_CLASSES = []
+
 INSTALLED_APPS = [
     'composite_field',
     'composite_field_test',
