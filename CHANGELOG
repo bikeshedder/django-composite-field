@@ -26,3 +26,9 @@ Version 0.5, 2015-07-29
   * Fix composite proxy __eq__ method when comparing against non composite values
   * Fix translation fallback
   * Fix verbose_name as positional argument in LocalizedField
+
+Version 0.6, 2015-08-21
+-----------------------
+
+  * Fix ModelForm for models with a CompositeField
+  * Implement 'current(_with_default)' and 'all' property of LocalizedField
