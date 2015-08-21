@@ -22,6 +22,8 @@
 *.bak
 
 # build
+/.eggs
+/.tox
 /build
 /dist
-/django-composite-field.egg-info
+/django_composite_field.egg-info
