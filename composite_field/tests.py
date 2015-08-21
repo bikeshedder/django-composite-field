@@ -69,6 +69,16 @@ class CompositeFieldTestCase(unittest.TestCase):
         self.assertTrue(fields.index(distance) < fields.index(target_x))
         self.assertTrue(fields.index(target_x) < fields.index(target_y))
 
+    def test_modelform(self):
+        from django import forms
+        class DirectionForm(forms.ModelForm):
+            class Meta:
+                model = Direction
+                fields = '__all__'
+        form = DirectionForm()
+        form = DirectionForm({})
+        form.is_valid()
+
 
 class LocalizedFieldTestCase(unittest.TestCase):
 

@@ -35,6 +35,7 @@ class CompositeField(object):
     column = None
     rel = None
     auto_created = False
+    editable = False
 
     def contribute_to_class(self, cls, name):
         self.name = name
