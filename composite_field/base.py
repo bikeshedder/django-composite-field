@@ -36,6 +36,7 @@ class CompositeField(object):
     rel = None
     auto_created = False
     editable = False
+    serialize = False
 
     def contribute_to_class(self, cls, name):
         self.name = name
