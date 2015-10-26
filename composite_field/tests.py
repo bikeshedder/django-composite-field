@@ -80,6 +80,10 @@ class CompositeFieldTestCase(unittest.TestCase):
         form = DirectionForm({})
         form.is_valid()
 
+    def test_full_clean(self):
+        place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
+        place.full_clean()
+
 
 class LocalizedFieldTestCase(unittest.TestCase):
 

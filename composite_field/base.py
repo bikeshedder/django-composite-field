@@ -37,6 +37,8 @@ class CompositeField(object):
     auto_created = False
     editable = False
     serialize = False
+    blank = True
+    empty_values = []
 
     def contribute_to_class(self, cls, name):
         self.name = name
@@ -102,6 +104,9 @@ class CompositeField(object):
 
     def set(self, model, value):
         self.get_proxy(model)._set(value)
+
+    def clean(self, value, model):
+        return value
 
     class Proxy(object):
 
