@@ -134,6 +134,23 @@ class LocalizedFieldTestCase(unittest.TestCase):
         get_field = foo._meta.get_field
         self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
+    def test_get_col(self):
+        foo1 = LocalizedFoo(name_de='eins', name_en='one')
+        foo1.save()
+        foo2 = LocalizedFoo(name_de='zwei', name_en='two')
+        foo2.save()
+        with translation.override('de'):
+            self.assertEqual(LocalizedFoo.objects.get(name='eins'), foo1)
+            self.assertRaises(LocalizedFoo.objects.get, name='one')
+        with translation.override('en'):
+            self.assertEqual(LocalizedFoo.objects.get(name='one'), foo1)
+            self.assertRaises(LocalizedFoo.objects.get, name='eins')
+        with translation.override('de'):
+            self.assertEqual(LocalizedFoo.objects.get(name='zwei'), foo2)
+            self.assertRaises(LocalizedFoo.objects.get, name='two')
+        with translation.override('en'):
+            self.assertEqual(LocalizedFoo.objects.get(name='two'), foo2)
+            self.assertRaises(LocalizedFoo.objects.get, name='zwei')
 
 class ComplexFieldTestCase(unittest.TestCase):
 

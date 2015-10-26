@@ -36,6 +36,16 @@ class LocalizedField(CompositeField):
     def get_proxy(self, model):
         return LocalizedField.Proxy(self, model)
 
+    def get_col(self, alias, field):
+        current_field = self.current_field
+        return current_field.get_col(alias, current_field)
+
+    @property
+    def current_field(self):
+        language = get_language()
+        base_lang = language.split('-')[0]
+        return self[base_lang]
+
     class Proxy(CompositeField.Proxy):
 
         def __bool__(self):
