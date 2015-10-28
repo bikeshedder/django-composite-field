@@ -41,3 +41,8 @@ Version 0.7.0, 2015-10-26
   * Fix Model.full_clean() error when using a CompositeField
   * Add 'get_col' method to LocalizedField making it possible
     to use it in a QuerySet.
+
+Version 0.7.1, 2015-10-28
+-------------------------
+
+  * Add primary_key=False to CompositeField
