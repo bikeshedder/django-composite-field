@@ -39,6 +39,7 @@ class CompositeField(object):
     serialize = False
     blank = True
     empty_values = []
+    primary_key = False
 
     def contribute_to_class(self, cls, name):
         self.name = name
