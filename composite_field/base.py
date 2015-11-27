@@ -40,6 +40,7 @@ class CompositeField(object):
     blank = True
     empty_values = []
     primary_key = False
+    flatchoices = []
 
     def contribute_to_class(self, cls, name):
         self.name = name
