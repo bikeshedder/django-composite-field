@@ -33,7 +33,8 @@ class CompositeField(object):
     is_relation = False
     concrete = False
     column = None
-    rel = None
+    rel = None  # Django<=1.9
+    remote_field = None  # Django>=1.9
     auto_created = False
     editable = False
     serialize = False
