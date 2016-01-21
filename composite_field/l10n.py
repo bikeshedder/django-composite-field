@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from django.conf import settings 
+from django.conf import settings
 from django.db.models.fields import Field, CharField, TextField, FloatField
 from django.utils import six
 from django.utils.functional import lazy
@@ -42,7 +42,7 @@ class LocalizedField(CompositeField):
 
     @property
     def current_field(self):
-        language = get_language()
+        language = get_language() or settings.LANGUAGE_CODE
         base_lang = language.split('-')[0]
         return self[base_lang]
 
@@ -56,7 +56,7 @@ class LocalizedField(CompositeField):
 
         def __setattr__(self, name, value):
             if name == 'current':
-                language = get_language()
+                language = get_language() or settings.LANGUAGE_CODE
                 base_lang = language.split('-')[0]
                 return setattr(self, base_lang, value)
             if name == 'all':
@@ -68,15 +68,16 @@ class LocalizedField(CompositeField):
 
         @property
         def current(self):
-            language = get_language()
+            language = get_language() or settings.LANGUAGE_CODE
             base_lang = language.split('-')[0]
             return getattr(self, base_lang)
 
         @property
         def current_with_fallback(self):
-            language = get_language()
+            language = get_language() or settings.LANGUAGE_CODE
             translation = None
             # 1. complete language code
+            print language
             translation = getattr(self, language, None)
             if translation:
                 return translation
