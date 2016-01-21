@@ -77,7 +77,6 @@ class LocalizedField(CompositeField):
             language = get_language() or settings.LANGUAGE_CODE
             translation = None
             # 1. complete language code
-            print language
             translation = getattr(self, language, None)
             if translation:
                 return translation
