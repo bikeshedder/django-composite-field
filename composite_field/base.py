@@ -124,9 +124,14 @@ class CompositeField(object):
             return self._composite_field.prefix + name
 
         def _set(self, values):
-            for name in self._composite_field:
-                subfield_name = self._composite_field.prefix + name
-                setattr(self._model, subfield_name, getattr(values, name))
+            if isinstance(values, dict):
+                for name in self._composite_field:
+                    subfield_name = self._composite_field.prefix + name
+                    setattr(self._model, subfield_name, values[name])
+            else:
+                for name in self._composite_field:
+                    subfield_name = self._composite_field.prefix + name
+                    setattr(self._model, subfield_name, getattr(values, name))
 
         def __setattr__(self, name, value):
             setattr(self._model, self._subfield_name(name), value)
@@ -151,3 +156,9 @@ class CompositeField(object):
                         for name in self._composite_field
             )
             return '%s(%s)' % (self._composite_field.__class__.__name__, fields)
+
+        def to_dict(self):
+            return {
+                name: getattr(self, name)
+                for name in self._composite_field
+            }
