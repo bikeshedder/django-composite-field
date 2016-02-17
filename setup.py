@@ -39,7 +39,7 @@ class DjangoTestCommand(Command):
 
 setup(
     name='django-composite-field',
-    version='0.7.3',
+    version='0.7.4',
     description='CompositeField implementation for Django',
     long_description=read('README'),
     author='Michael P. Jung',
