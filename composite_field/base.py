@@ -87,12 +87,12 @@ class CompositeField(object):
         return six.iterkeys(self.subfields)
 
     def __eq__(self, other):
-        if isinstance(other, CompositeField):
+        if isinstance(other, (CompositeField, Field)):
             return self.creation_counter == other.creation_counter
         return NotImplemented
 
     def __lt__(self, other):
-        if isinstance(other, CompositeField):
+        if isinstance(other, (CompositeField, Field)):
             return self.creation_counter < other.creation_counter
         return NotImplemented
 
@@ -110,6 +110,14 @@ class CompositeField(object):
 
     def clean(self, value, model):
         return value
+
+    def formfield(self, form):
+        from django.forms import MultiValueField
+        from django import forms
+        return forms.CharField()
+
+    def get_attname_column(self):
+        return self.attname, None
 
     class Proxy(object):
 
