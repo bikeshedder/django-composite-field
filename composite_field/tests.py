@@ -174,6 +174,18 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo1.delete()
             foo2.delete()
 
+    def test_raw_sql(self):
+        foo = LocalizedFoo(name_de='Antwort', name_en='answer')
+        try:
+            foo.save()
+            foo2 = LocalizedFoo.objects.raw('SELECT * FROM composite_field_test_localizedfoo')[0]
+            with translation.override('de'):
+                self.assertEqual(unicode(foo2.name), 'Antwort')
+            with translation.override('en'):
+                self.assertEqual(unicode(foo2.name), 'answer')
+        finally:
+            foo.delete()
+
 class ComplexFieldTestCase(unittest.TestCase):
 
     def test_attributes(self):
