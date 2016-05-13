@@ -36,7 +36,7 @@ class LocalizedField(CompositeField):
     def get_proxy(self, model):
         return LocalizedField.Proxy(self, model)
 
-    def get_col(self, alias, field):
+    def get_col(self, alias, output_field=None):
         current_field = self.current_field
         return current_field.get_col(alias, current_field)
 
