@@ -9,7 +9,7 @@ from django.utils.translation import get_language
 from . import CompositeField
 
 
-LANGUAGES = map(lambda lang: lang[0], getattr(settings, 'LANGUAGES', ()))
+LANGUAGES = [l[0] for l in getattr(settings, 'LANGUAGES', [])]
 
 
 class LocalizedField(CompositeField):
