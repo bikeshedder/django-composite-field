@@ -5,6 +5,7 @@ from django.db.models.fields import Field, CharField, TextField, FloatField
 from django.utils import six
 from django.utils.functional import lazy
 from django.utils.translation import get_language
+from django.utils import translation
 
 from . import CompositeField
 
@@ -45,6 +46,17 @@ class LocalizedField(CompositeField):
         language = get_language() or settings.LANGUAGE_CODE
         base_lang = language.split('-')[0]
         return self[base_lang]
+
+    def set(self, model, value):
+        from django.utils.functional import Promise
+        # XXX is there a better way to detect ugettext_lazy objects?
+        if isinstance(value, Promise):
+            d = {}
+            for language in self:
+                with translation.override(language):
+                    d[language] = unicode(value)
+            value = d
+        return super(LocalizedField, self).set(model, value)
 
     class Proxy(CompositeField.Proxy):
 
