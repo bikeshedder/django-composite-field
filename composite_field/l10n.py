@@ -47,6 +47,18 @@ class LocalizedField(CompositeField):
         base_lang = language.split('-')[0]
         return self[base_lang]
 
+    @property
+    def help_text(self):
+        return self.current_field.help_text
+
+    @property
+    def choices(self):
+        return self.current_field.choices
+
+    @property
+    def max_length(self):
+        return self.current_field.max_length
+
     def set(self, model, value):
         from django.utils.functional import Promise
         # XXX is there a better way to detect ugettext_lazy objects?
