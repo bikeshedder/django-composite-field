@@ -206,6 +206,7 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo1.delete()
             foo2.delete()
 
+    @unittest.skipIf((1, 8) <= django.VERSION < (1, 10), 'Django introduced a infinite recursion bug for properties of deferred models that was fixed in Django 1.10')
     def test_raw_sql(self):
         foo = LocalizedFoo(name_de='Antwort', name_en='answer')
         try:
