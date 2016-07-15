@@ -80,6 +80,36 @@ class CompositeFieldTestCase(unittest.TestCase):
         form = DirectionForm({})
         form.is_valid()
 
+    def test_modelform_with_exclude(self):
+        from django import forms
+        class LocalizedFooForm(forms.ModelForm):
+            class Meta:
+                model = LocalizedFoo
+                exclude = ()
+        form = LocalizedFooForm()
+        form = LocalizedFooForm({})
+        self.assertFalse(form.is_valid())
+        form = LocalizedFooForm({'name_de': 'Banane', 'name_en': 'Banana'})
+        self.assertTrue(form.is_valid())
+        foo = form.save(commit=False)
+        self.assertEquals(foo.name.de, 'Banane')
+        self.assertEquals(foo.name.en, 'Banana')
+
+    def test_modelform_with_fields(self):
+        from django import forms
+        class LocalizedFooForm(forms.ModelForm):
+            class Meta:
+                model = LocalizedFoo
+                fields = ('name_de', 'name_en')
+        form = LocalizedFooForm()
+        form = LocalizedFooForm({})
+        self.assertFalse(form.is_valid())
+        form = LocalizedFooForm({'name_de': 'Banane', 'name_en': 'Banana'})
+        self.assertTrue(form.is_valid())
+        foo = form.save(commit=False)
+        self.assertEquals(foo.name.de, 'Banane')
+        self.assertEquals(foo.name.en, 'Banana')
+
     def test_full_clean(self):
         place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
         place.full_clean()
