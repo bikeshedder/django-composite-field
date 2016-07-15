@@ -158,13 +158,13 @@ class LocalizedFieldTestCase(unittest.TestCase):
         self.assertEqual(foo.name_de, 'Felix')
         self.assertEqual(foo.name_en, 'Felix')
 
-    @unittest.skipIf(django.VERSION <= (1, 8), 'get_fields returns virtual fields since Django 1.8')
+    @unittest.skipIf(django.VERSION < (1, 8), 'get_fields returns virtual fields since Django 1.8')
     def test_verbose_name_1_8(self):
         foo = LocalizedFoo()
         get_field = foo._meta.get_field
         self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
-    @unittest.skipIf(django.VERSION <= (1, 7), 'get_col support was added in Django 1.8')
+    @unittest.skipIf(django.VERSION < (1, 8), 'get_col support was added in Django 1.8')
     def test_filter(self):
         foo1 = LocalizedFoo(name_de='eins', name_en='one')
         foo2 = LocalizedFoo(name_de='zwei', name_en='two')
@@ -187,7 +187,7 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo1.delete()
             foo2.delete()
 
-    @unittest.skipIf(django.VERSION <= (1, 7), 'get_col support was added in Django 1.8')
+    @unittest.skipIf(django.VERSION < (1, 8), 'get_col support was added in Django 1.8')
     def test_order_by(self):
         foo1 = LocalizedFoo(name_de='Erdnuss', name_en='peanut')
         foo2 = LocalizedFoo(name_de='Schinken', name_en='ham')
