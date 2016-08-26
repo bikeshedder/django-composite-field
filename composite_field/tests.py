@@ -3,6 +3,7 @@ import unittest
 import django
 from django.utils import translation
 from django.utils.encoding import force_text
+import six
 
 from composite_field_test.models import Place
 from composite_field_test.models import Direction
@@ -173,16 +174,16 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo2.save()
             with translation.override('de'):
                 self.assertEqual(LocalizedFoo.objects.get(name='eins'), foo1)
-                self.assertRaises(LocalizedFoo.objects.get, name='one')
+                self.assertRaises(LocalizedFoo.DoesNotExist, LocalizedFoo.objects.get, name='one')
             with translation.override('en'):
                 self.assertEqual(LocalizedFoo.objects.get(name='one'), foo1)
-                self.assertRaises(LocalizedFoo.objects.get, name='eins')
+                self.assertRaises(LocalizedFoo.DoesNotExist, LocalizedFoo.objects.get, name='eins')
             with translation.override('de'):
                 self.assertEqual(LocalizedFoo.objects.get(name='zwei'), foo2)
-                self.assertRaises(LocalizedFoo.objects.get, name='two')
+                self.assertRaises(LocalizedFoo.DoesNotExist, LocalizedFoo.objects.get, name='two')
             with translation.override('en'):
                 self.assertEqual(LocalizedFoo.objects.get(name='two'), foo2)
-                self.assertRaises(LocalizedFoo.objects.get, name='zwei')
+                self.assertRaises(LocalizedFoo.DoesNotExist, LocalizedFoo.objects.get, name='zwei')
         finally:
             foo1.delete()
             foo2.delete()
@@ -213,9 +214,9 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo.save()
             foo2 = LocalizedFoo.objects.raw('SELECT * FROM composite_field_test_localizedfoo')[0]
             with translation.override('de'):
-                self.assertEqual(unicode(foo2.name), 'Antwort')
+                self.assertEqual(six.text_type(foo2.name), 'Antwort')
             with translation.override('en'):
-                self.assertEqual(unicode(foo2.name), 'answer')
+                self.assertEqual(six.text_type(foo2.name), 'answer')
         finally:
             foo.delete()
 
