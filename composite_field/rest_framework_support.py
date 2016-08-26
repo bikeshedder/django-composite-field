@@ -7,6 +7,7 @@ class CompositeFieldSerializer(serializers.Field):
         return obj.to_dict()
 
     def to_internal_value(self, data):
+        # FIXME add validation of max_length parameter
         return data
 
 
