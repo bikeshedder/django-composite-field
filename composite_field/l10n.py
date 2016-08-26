@@ -6,6 +6,7 @@ from django.utils import six
 from django.utils.functional import lazy
 from django.utils.translation import get_language
 from django.utils import translation
+import six
 
 from . import CompositeField
 
@@ -66,7 +67,7 @@ class LocalizedField(CompositeField):
             d = {}
             for language in self:
                 with translation.override(language):
-                    d[language] = unicode(value)
+                    d[language] = six.text_type(value)
             value = d
         return super(LocalizedField, self).set(model, value)
 
@@ -75,8 +76,11 @@ class LocalizedField(CompositeField):
         def __bool__(self):
             return bool(six.text_type(self))
 
+        def __str__(self):
+            return str(self.current_with_fallback)
+
         def __unicode__(self):
-            return unicode(self.current_with_fallback)
+            return six.text_type(self.current_with_fallback)
 
         def __setattr__(self, name, value):
             if name == 'current':
