@@ -1,6 +1,8 @@
+import math
 import unittest
 
 import django
+import django.test
 from django.utils import translation
 from django.utils.encoding import force_text
 import six
@@ -331,3 +333,69 @@ class RunChecksTestCase(unittest.TestCase):
         errors = [str(e) for e in all_issues if e.level >= checks.ERROR]
         if errors:
             self.fail('checks failed:\n' + '\n'.join(errors))
+
+
+class AdminTestCase(django.test.TestCase):
+
+    def setUp(self):
+        from django.contrib.auth.models import User
+        self.factory = django.test.RequestFactory()
+        self.user = self.user = User.objects.create_superuser(
+                username='john.doe',
+                email='john.doe@example.com',
+                password='xxx12345')
+
+    def test_login(self):
+        self.assertTrue(self.client.login(username='john.doe', password='xxx12345'))
+
+    def test_admin_index(self):
+        self.client.login(username='john.doe', password='xxx12345')
+        self.client.get('/admin/')
+
+    @unittest.skipIf(django.VERSION <= (1, 9), 'the admin URLs are slightly different in django 1.9+')
+    def test_crud_direction(self):
+        self.client.login(username='john.doe', password='xxx12345')
+        # create
+        response = self.client.get('/admin/composite_field_test/direction/add/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post('/admin/composite_field_test/direction/add/', {
+            'source_x': '0.25',
+            'source_y': '0.5',
+            'distance': six.text_type(math.sqrt(2.0)),
+            'target_x': '1.25',
+            'target_y': '1.5',
+        })
+        direction = Direction.objects.get()
+        self.assertEquals(direction.source_x, 0.25)
+        self.assertEquals(direction.source_y, 0.5)
+        self.assertAlmostEquals(direction.distance, math.sqrt(2))
+        self.assertEquals(direction.target_x, 1.25)
+        self.assertEquals(direction.target_y, 1.5)
+        self.assertEquals(response.status_code, 302)
+        # read
+        response = self.client.get('/admin/composite_field_test/direction/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get('/admin/composite_field_test/direction/1/change/')
+        self.assertEquals(response.status_code, 200)
+        # update
+        response = self.client.post('/admin/composite_field_test/direction/1/change/', {
+            'source_x': '0.5',
+            'source_y': '0.75',
+            'distance': six.text_type(math.sqrt(2.0)/2.0),
+            'target_x': '1.0',
+            'target_y': '1.25',
+        })
+        direction = Direction.objects.get()
+        self.assertEquals(direction.source_x, 0.5)
+        self.assertEquals(direction.source_y, 0.75)
+        self.assertAlmostEquals(direction.distance, math.sqrt(2)/2.0)
+        self.assertEquals(direction.target_x, 1.0)
+        self.assertEquals(direction.target_y, 1.25)
+        self.assertEquals(response.status_code, 302)
+        # delete
+        response = self.client.get('/admin/composite_field_test/direction/1/delete/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post('/admin/composite_field_test/direction/1/delete/', {
+            'post': 'yes',
+        })
+        self.assertEquals(response.status_code, 302)
