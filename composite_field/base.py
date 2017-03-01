@@ -43,6 +43,15 @@ class CompositeField(object):
     primary_key = False
     flatchoices = []
 
+    # Field flags
+    hidden = False
+
+    many_to_many = None
+    many_to_one = None
+    one_to_many = None
+    one_to_one = None
+    related_model = None
+
     def contribute_to_class(self, cls, name):
         self.name = name
         self.field_name = name
