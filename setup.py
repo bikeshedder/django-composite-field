@@ -41,7 +41,7 @@ setup(
     name='django-composite-field',
     version='0.7.6',
     description='CompositeField implementation for Django',
-    long_description=read('README'),
+    long_description=read('README.rst'),
     author='Michael P. Jung',
     author_email='michael.jung@terreon.de',
     license='BSD',
