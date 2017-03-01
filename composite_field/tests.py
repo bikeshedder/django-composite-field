@@ -139,12 +139,7 @@ class LocalizedFieldTestCase(unittest.TestCase):
 
     def test_general(self):
         foo = LocalizedFoo()
-        # The behavior changed from Django >= 1.8 and virtual
-        # fields are now part of the fields list.
-        if django.VERSION >= (1, 8):
-            self.assertEqual(len(LocalizedFoo._meta.fields), 4)
-        else:
-            self.assertEqual(len(LocalizedFoo._meta.fields), 3)
+        self.assertEqual(len(LocalizedFoo._meta.fields), 4)
         foo.name_de = 'Mr.'
         foo.name_en = 'Herr'
         self.assertEqual(foo.name.de, 'Mr.')
@@ -178,13 +173,11 @@ class LocalizedFieldTestCase(unittest.TestCase):
         self.assertEqual(foo.name_de, 'Felix')
         self.assertEqual(foo.name_en, 'Felix')
 
-    @unittest.skipIf(django.VERSION < (1, 8), 'get_fields returns virtual fields since Django 1.8')
-    def test_verbose_name_1_8(self):
+    def test_verbose_name(self):
         foo = LocalizedFoo()
         get_field = foo._meta.get_field
         self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
-    @unittest.skipIf(django.VERSION < (1, 8), 'get_col support was added in Django 1.8')
     def test_filter(self):
         foo1 = LocalizedFoo(name_de='eins', name_en='one')
         foo2 = LocalizedFoo(name_de='zwei', name_en='two')
@@ -207,7 +200,6 @@ class LocalizedFieldTestCase(unittest.TestCase):
             foo1.delete()
             foo2.delete()
 
-    @unittest.skipIf(django.VERSION < (1, 8), 'get_col support was added in Django 1.8')
     def test_order_by(self):
         foo1 = LocalizedFoo(name_de='Erdnuss', name_en='peanut')
         foo2 = LocalizedFoo(name_de='Schinken', name_en='ham')
@@ -316,12 +308,10 @@ class InheritanceTestCase(unittest.TestCase):
         b = TranslatedModelB(name_en='Petra Musterfrau', name_de='Jane Doe')
         get_a_field = a._meta.get_field
         get_b_field = b._meta.get_field
-        if django.VERSION >= (1, 8):
-            self.assertIs(get_a_field('name').model, TranslatedModelA)
+        self.assertIs(get_a_field('name').model, TranslatedModelA)
         self.assertIs(get_a_field('name_de').model, TranslatedModelA)
         self.assertIs(get_a_field('name_en').model, TranslatedModelA)
-        if django.VERSION >= (1, 8):
-            self.assertIs(get_b_field('name').model, TranslatedModelB)
+        self.assertIs(get_b_field('name').model, TranslatedModelB)
         self.assertIs(get_b_field('name_de').model, TranslatedModelB)
         self.assertIs(get_b_field('name_en').model, TranslatedModelB)
 
@@ -330,19 +320,16 @@ class InheritanceTestCase(unittest.TestCase):
         d = TranslatedModelD(name_en='Petra Musterfrau', name_de='Jane Doe')
         get_c_field = c._meta.get_field
         get_d_field = d._meta.get_field
-        if django.VERSION >= (1, 8):
-            self.assertIs(get_c_field('name').model, TranslatedNonAbstractBase)
+        self.assertIs(get_c_field('name').model, TranslatedNonAbstractBase)
         self.assertIs(get_c_field('name_de').model, TranslatedNonAbstractBase)
         self.assertIs(get_c_field('name_en').model, TranslatedNonAbstractBase)
-        if django.VERSION >= (1, 8):
-            self.assertIs(get_d_field('name').model, TranslatedNonAbstractBase)
+        self.assertIs(get_d_field('name').model, TranslatedNonAbstractBase)
         self.assertIs(get_d_field('name_de').model, TranslatedNonAbstractBase)
         self.assertIs(get_d_field('name_en').model, TranslatedNonAbstractBase)
 
 
 class RunChecksTestCase(unittest.TestCase):
 
-    @unittest.skipIf(django.VERSION <= (1, 7), 'checks were introduced in Django 1.7+')
     def test_checks(self):
         django.setup()
         from django.core import checks
@@ -369,7 +356,7 @@ class AdminTestCase(django.test.TestCase):
         self.client.login(username='john.doe', password='xxx12345')
         self.client.get('/admin/')
 
-    @unittest.skipIf(django.VERSION <= (1, 9), 'the admin URLs are slightly different in django 1.9+')
+    @unittest.skipIf(django.VERSION < (1, 9), 'the admin URLs are slightly different in django 1.9+')
     def test_crud_direction(self):
         self.client.login(username='john.doe', password='xxx12345')
         # create
