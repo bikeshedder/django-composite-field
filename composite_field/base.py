@@ -129,7 +129,7 @@ class CompositeField(object):
             object.__setattr__(self, '_model', model)
 
         def _subfield_name(self, name):
-            if not name in self._composite_field:
+            if name not in self._composite_field:
                 raise AttributeError('%r object has no attribute %r' % (
                         self._composite_field.__class__.__name__, name))
             return self._composite_field.prefix + name
