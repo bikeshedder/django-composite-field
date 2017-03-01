@@ -1,0 +1,12 @@
+# Bitbucket pipelines configuration to run the tox tests
+# (See https://confluence.atlassian.com/x/VYk8Lw)
+image: python:3.5.1
+
+pipelines:
+  default:
+    - step:
+        script:
+          - pip install -U tox
+          - pip --version
+          - tox --version
+          - tox
