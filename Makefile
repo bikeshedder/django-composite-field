@@ -1,7 +1,7 @@
 default: dist
 
 clean:
-	rm -rf build dinbrief.egg-info dist
+	rm -rf build dinbrief.egg-info dist .tox
 
 sdist:
 	python setup.py sdist
