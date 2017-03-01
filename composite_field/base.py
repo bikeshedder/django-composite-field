@@ -64,7 +64,8 @@ class CompositeField(object):
         else:
             cls._meta.add_field(self, virtual=True)
 
-    def __init__(self, prefix=None):
+    def __init__(self, prefix=None, default=None):
+        self.default = default or {}
         self.prefix = prefix
         self.model = None
         self.subfields = deepcopy(self.subfields)
@@ -73,6 +74,8 @@ class CompositeField(object):
         for subfield in six.itervalues(self.subfields):
             subfield.creation_counter = Field.creation_counter
             Field.creation_counter += 1
+        for name, value in six.iteritems(self.default):
+            self.subfields[name].default = value
 
     def __getitem__(self, name):
         return self.subfields[name]

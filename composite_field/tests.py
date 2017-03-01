@@ -8,6 +8,7 @@ from django.utils.encoding import force_text
 import six
 
 from composite_field_test.models import Place
+from composite_field_test.models import PlaceWithDefaultCoord
 from composite_field_test.models import Direction
 from composite_field_test.models import LocalizedFoo
 from composite_field_test.models import ComplexTuple
@@ -116,6 +117,11 @@ class CompositeFieldTestCase(unittest.TestCase):
     def test_full_clean(self):
         place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
         place.full_clean()
+
+    def test_default_kwarg(self):
+        place = PlaceWithDefaultCoord()
+        self.assertEqual(place.coord.x, 1.0)
+        self.assertEqual(place.coord.y, 2.0)
 
 
 class LocalizedFieldTestCase(unittest.TestCase):

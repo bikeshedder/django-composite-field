@@ -16,6 +16,11 @@ class Place(models.Model):
     coord = CoordField()
 
 
+class PlaceWithDefaultCoord(models.Model):
+    name = models.CharField(max_length=10)
+    coord = CoordField(default={'x': 1.0, 'y': 2.0})
+
+
 class Direction(models.Model):
     source = CoordField()
     distance = models.FloatField()
