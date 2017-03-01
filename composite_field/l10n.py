@@ -3,9 +3,10 @@ from copy import deepcopy
 from django.conf import settings
 from django.db import models
 from django.utils import six
+from django.utils import translation
 from django.utils.functional import lazy
 from django.utils.translation import get_language
-from django.utils import translation
+from django.utils.encoding import python_2_unicode_compatible
 import six
 
 from .base import CompositeField
@@ -71,16 +72,14 @@ class LocalizedField(CompositeField):
             value = d
         return super(LocalizedField, self).set(model, value)
 
+    @python_2_unicode_compatible
     class Proxy(CompositeField.Proxy):
 
         def __bool__(self):
-            return bool(six.text_type(self))
+            return bool(self.current_with_fallback)
 
         def __str__(self):
-            return str(self.current_with_fallback)
-
-        def __unicode__(self):
-            return six.text_type(self.current_with_fallback)
+            return self.current_with_fallback
 
         def __setattr__(self, name, value):
             if name == 'current':
@@ -120,7 +119,7 @@ class LocalizedField(CompositeField):
                 translation = getattr(self, base_lang, None)
                 if translation:
                     return translation
-            return ''
+            return u''
 
 
 class LocalizedCharField(LocalizedField):
