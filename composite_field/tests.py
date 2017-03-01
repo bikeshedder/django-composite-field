@@ -3,6 +3,7 @@ import unittest
 
 import django
 import django.test
+from django.test import TestCase
 from django.utils import translation
 from django.utils.encoding import force_text
 import six
@@ -21,7 +22,7 @@ from composite_field_test.models import TranslatedModelC
 from composite_field_test.models import TranslatedModelD
 
 
-class CompositeFieldTestCase(unittest.TestCase):
+class CompositeFieldTestCase(TestCase):
 
     def test_repr(self):
         place = Place(coord_x=12.0, coord_y=42.0)
@@ -135,7 +136,7 @@ class CompositeFieldTestCase(unittest.TestCase):
             place.coord = {'x': 0.0}
 
 
-class LocalizedFieldTestCase(unittest.TestCase):
+class LocalizedFieldTestCase(TestCase):
 
     def test_general(self):
         foo = LocalizedFoo()
@@ -231,7 +232,7 @@ class LocalizedFieldTestCase(unittest.TestCase):
         finally:
             foo.delete()
 
-class ComplexFieldTestCase(unittest.TestCase):
+class ComplexFieldTestCase(TestCase):
 
     def test_attributes(self):
         t = ComplexTuple()
@@ -301,7 +302,7 @@ class ComplexFieldTestCase(unittest.TestCase):
         self.assertEqual(get_field('z_imag').verbose_name, 'Im(gamma)')
 
 
-class InheritanceTestCase(unittest.TestCase):
+class InheritanceTestCase(TestCase):
 
     def test_abstract_inheritance(self):
         a = TranslatedModelA(name_de='Max Mustermann', name_en='John Doe')
@@ -328,7 +329,7 @@ class InheritanceTestCase(unittest.TestCase):
         self.assertIs(get_d_field('name_en').model, TranslatedNonAbstractBase)
 
 
-class RunChecksTestCase(unittest.TestCase):
+class RunChecksTestCase(TestCase):
 
     def test_checks(self):
         django.setup()
