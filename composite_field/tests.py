@@ -123,6 +123,17 @@ class CompositeFieldTestCase(unittest.TestCase):
         self.assertEqual(place.coord.x, 1.0)
         self.assertEqual(place.coord.y, 2.0)
 
+    def test_assign_dict(self):
+        place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
+        place.coord = {'x': 1.0, 'y': 2.0}
+        self.assertEqual(place.coord.x, 1.0)
+        self.assertEqual(place.coord.y, 2.0)
+
+    def test_assign_incomplete_dict(self):
+        place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
+        with self.assertRaises(KeyError):
+            place.coord = {'x': 0.0}
+
 
 class LocalizedFieldTestCase(unittest.TestCase):
 
