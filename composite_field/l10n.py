@@ -1,14 +1,14 @@
 from copy import deepcopy
 
 from django.conf import settings
-from django.db.models.fields import Field, CharField, TextField, FloatField
+from django.db import models
 from django.utils import six
 from django.utils.functional import lazy
 from django.utils.translation import get_language
 from django.utils import translation
 import six
 
-from . import CompositeField
+from .base import CompositeField
 
 
 LANGUAGES = [l[0] for l in getattr(settings, 'LANGUAGES', [])]
@@ -126,10 +126,10 @@ class LocalizedField(CompositeField):
 class LocalizedCharField(LocalizedField):
 
     def __init__(self, *args, **kwargs):
-        super(LocalizedCharField, self).__init__(CharField, *args, **kwargs)
+        super(LocalizedCharField, self).__init__(models.CharField, *args, **kwargs)
 
 
 class LocalizedTextField(LocalizedField):
 
     def __init__(self, *args, **kwargs):
-        super(LocalizedTextField, self).__init__(TextField, *args, **kwargs)
+        super(LocalizedTextField, self).__init__(models.TextField, *args, **kwargs)
