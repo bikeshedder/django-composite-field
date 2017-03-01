@@ -79,7 +79,11 @@ class LocalizedField(CompositeField):
             return bool(self.current_with_fallback)
 
         def __str__(self):
-            return self.current_with_fallback
+            # Current_with_fallback can be a non-string type when using
+            # the localized field with a non-string Field. e.g.
+            # LocalizedField(IntegerField) is possilbe and would result
+            # in an error if leaving out the text_type(...) call.
+            return six.text_type(self.current_with_fallback)
 
         def __setattr__(self, name, value):
             if name == 'current':
