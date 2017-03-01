@@ -358,6 +358,21 @@ class AdminTestCase(django.test.TestCase):
         self.client.get('/admin/')
 
     @unittest.skipIf(django.VERSION < (1, 9), 'the admin URLs are slightly different in django 1.9+')
+    def test_translated_model_a(self):
+        self.client.login(username='john.doe', password='xxx12345')
+        response = self.client.get('/admin/composite_field_test/translatedmodela/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get('/admin/composite_field_test/translatedmodela/add/')
+        self.assertEquals(response.status_code, 200)
+        obj = TranslatedModelA.objects.create(name_de='Foo', name_en='Foo')
+        response = self.client.get('/admin/composite_field_test/translatedmodela/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get('/admin/composite_field_test/translatedmodela/%s/change/' % obj.pk)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get('/admin/composite_field_test/translatedmodela/%s/delete/' % obj.pk)
+        self.assertEquals(response.status_code, 200)
+
+    @unittest.skipIf(django.VERSION < (1, 9), 'the admin URLs are slightly different in django 1.9+')
     def test_crud_direction(self):
         self.client.login(username='john.doe', password='xxx12345')
         # create
