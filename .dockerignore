@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info
+
+*.sqlite
+*.swp
+
+/Dockerfile
+/.dockerignore
+/.eggs
+/.git
+/target
+/.tox
