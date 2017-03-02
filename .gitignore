@@ -27,3 +27,4 @@
 /build
 /dist
 /django_composite_field.egg-info
+/db.sqlite
