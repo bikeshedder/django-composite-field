@@ -46,3 +46,49 @@ Version 0.7.1, 2015-10-28
 -------------------------
 
   * Add primary_key=False to CompositeField
+
+Version 0.7.2, 2015-11-27
+-------------------------
+
+  * Add empty flatchoices attribute to CompositeField
+
+Version 0.7.3, 2016-01-21
+-------------------------
+
+  * Fix Django 1.9 support
+  * Fix LocalizedField for Django 1.8+ when no translation is active
+  * Add remote_field=None to CompositeField
+
+Version 0.7.4, 2016-02-17
+-------------------------
+
+  * Fix Django 1.9 support
+  * Add support for dicts as composite field values
+  * Add django-rest-framework serializer support
+
+Version 0.7.5, 2016-06-16
+-------------------------
+
+  * Fix Python 3 support
+  * Add test case for raw SQL query
+  * Fix ordering query sets by a localized field
+  * Drop support for Python 2.6
+  * Fix __eq__ and __lt__ method of CompositeField
+
+Version 0.7.6, 2016-07-01
+-------------------------
+
+  * Add help_text, choices and max_length proxy properties
+  * Add support for assigning ugettext_lazy to localized fields
+
+Version 0.8.0, unreleased
+-------------------------
+
+ * Drop support for Python 3.2 and 3.3
+ * Add tests for modelform with include and exclude meta parameter
+ * Fix Python 3.x compatibility
+ * Improve test cases
+ * Add default kwarg to CompositeField
+ * Drop support for Django < 1.8
+ * Add docker configuration for running the tests
+ * Add bitbucket-pipeline to run tests on push
