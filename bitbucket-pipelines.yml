@@ -1,35 +1,16 @@
 # Bitbucket pipelines configuration to run the tox tests
 # (See https://confluence.atlassian.com/x/VYk8Lw)
-image: python:3.5
+image: ubuntu:16.04
 
 pipelines:
-  python-2.7:
+  default:
     - step:
-        image: python:2.7
         script:
-          - pip install -U tox
-          - tox -e "py27-django{18,19,110}"
-  python-3.2:
-    - step:
-        image: python:3.2
-        script:
-          - pip install -U tox
-          - tox -e "py32-django{18,19,110}"
-  python-3.3:
-    - step:
-        image: python:3.3
-        script:
-          - pip install -U tox
-          - tox -e "py33-django{18,19,110}"
-  python-3.4:
-    - step:
-        image: python:3.4
-        script:
-          - pip install -U tox
-          - tox -e "py34-django{18,19,110}"
-  python-3.5:
-    - step:
-        image: python:3.5
-        script:
-          - pip install -U tox
-          - tox -e "py35-django{18,19,110}"
+            - apt-get update
+            - apt-get install -y apt-utils software-properties-common
+            - add-apt-repository ppa:fkrull/deadsnakes
+            - apt-get update
+            - apt-get install -y python python2.7 python3.2 python3.3 python3.4 python3.5 virtualenv
+            - virtualenv /opt/venv
+            - /opt/venv/bin/pip install tox
+            - /opt/venv/bin/tox
