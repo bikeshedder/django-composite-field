@@ -4,12 +4,20 @@ import os
 from setuptools import Command
 from setuptools import setup
 
-# Utility function to read the README file.
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
 def read(fname):
+    '''Utility function to read files relative to the project root'''
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+def get_version():
+    '''Get __version__ information from __init__.py without importing it'''
+    import re
+    VERSION_RE = r'^__version__\s*=\s*[\'"]([^\'"]+)[\'"]'
+    VERSION_PATTERN = re.compile(VERSION_RE, re.MULTILINE)
+    m = VERSION_PATTERN.search(read('mushroom', '__init__.py'))
+    if m:
+        return m.group(1)
+    else:
+        raise RuntimeError('Could not get __version__ from mushroom/__init__.py')
 
 # Prevent "TypeError: 'NoneType' object is not callable" when running tests.
 # (http://www.eby-sarna.com/pipermail/peak/2010-May/003357.html)
@@ -39,7 +47,7 @@ class DjangoTestCommand(Command):
 
 setup(
     name='django-composite-field',
-    version='0.7.6',
+    version=get_version(),
     description='CompositeField implementation for Django',
     long_description=read('README.rst'),
     author='Michael P. Jung',
