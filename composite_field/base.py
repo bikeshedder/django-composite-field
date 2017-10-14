@@ -112,7 +112,7 @@ class CompositeField(object):
         return hash(self.creation_counter)
 
     def get_proxy(self, model):
-        return CompositeField.Proxy(self, model)
+        return self.Proxy(self, model)
 
     def get(self, model):
         return self.get_proxy(model)

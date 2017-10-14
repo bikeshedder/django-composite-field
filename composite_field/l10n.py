@@ -36,9 +36,6 @@ class LocalizedField(CompositeField):
             self[language].verbose_name = lazy(lambda language: self.verbose_name + ' (' + language + ')', six.text_type)(language)
         super(LocalizedField, self).contribute_to_class(cls, field_name)
 
-    def get_proxy(self, model):
-        return LocalizedField.Proxy(self, model)
-
     def get_col(self, alias, output_field=None):
         current_field = self.current_field
         return current_field.get_col(alias, current_field)
