@@ -135,6 +135,16 @@ class CompositeFieldTestCase(TestCase):
         with self.assertRaises(KeyError):
             place.coord = {'x': 0.0}
 
+    def test_bool(self):
+        place = Place(name='Answer')
+        self.assertFalse(place.coord)
+        place.coord = {'x': 0.0, 'y': None}
+        self.assertFalse(place.coord)
+        place.coord = {'x': None, 'y': 0.0}
+        self.assertFalse(place.coord)
+        place.coord = {'x': 0.0, 'y': 0.0}
+        self.assertTrue(place.coord)
+
 
 class LocalizedFieldTestCase(TestCase):
 

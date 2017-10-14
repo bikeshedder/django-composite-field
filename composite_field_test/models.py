@@ -7,8 +7,13 @@ from composite_field import ComplexField
 
 
 class CoordField(CompositeField):
-    x = models.FloatField()
-    y = models.FloatField()
+    x = models.FloatField(null=True)
+    y = models.FloatField(null=True)
+
+    class Proxy(CompositeField.Proxy):
+
+        def __bool__(self):
+            return self.x is not None and self.y is not None
 
 
 class Place(models.Model):
