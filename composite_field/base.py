@@ -177,6 +177,12 @@ class CompositeField(object):
             )
             return '%s(%s)' % (self._composite_field.__class__.__name__, fields)
 
+        def __bool__(self):
+            return True
+
+        def __nonzero__(self):
+            return self.__bool__()
+
         def to_dict(self):
             return {
                 name: getattr(self, name)

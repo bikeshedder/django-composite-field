@@ -232,6 +232,12 @@ class LocalizedFieldTestCase(TestCase):
         finally:
             foo.delete()
 
+    def test_bool(self):
+        foo = LocalizedFoo()
+        self.assertFalse(foo.name)
+        foo.name_de = 'test'
+        self.assertTrue(foo.name)
+
 class ComplexFieldTestCase(TestCase):
 
     def test_attributes(self):
