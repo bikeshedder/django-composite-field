@@ -70,8 +70,11 @@ class CompositeField(object):
         if hasattr(cls._meta, 'add_virtual_field'):
             # Django < 1.8
             cls._meta.add_virtual_field(self)
-        else:
+        elif hasattr(cls._meta, 'virtual_fields'):
+            # Django < 2.0
             cls._meta.add_field(self, virtual=True)
+        else:
+            cls._meta.add_field(self, private=True)
 
     def __init__(self, prefix=None, default=None):
         self.default = default or {}
