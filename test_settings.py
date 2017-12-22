@@ -13,6 +13,13 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
+# This replaces MIDDLEWARE_CLASSES since Django 1.10
+MIDDLEWARE = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+]
+
 INSTALLED_APPS = [
     'composite_field',
     'composite_field_test',
