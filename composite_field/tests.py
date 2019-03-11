@@ -4,6 +4,10 @@ import unittest
 import django
 import django.test
 from django.test import TestCase
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.utils import translation
 from django.utils.encoding import force_text
 
@@ -434,3 +438,11 @@ class AdminTestCase(django.test.TestCase):
             'post': 'yes',
         })
         self.assertEquals(response.status_code, 302)
+
+    def test_readonly(self):
+        self.client.login(username='john.doe', password='xxx12345')
+
+        place = PlaceWithDefaultCoord.objects.create()
+
+        response = self.client.get(reverse('admin:composite_field_test_placewithdefaultcoord_change', args=(place.id,)))
+        self.assertEquals(response.status_code, 200)

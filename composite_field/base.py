@@ -55,6 +55,8 @@ class CompositeField(object, metaclass=CompositeFieldBase):
         self.name = name
         self.field_name = name
         self.attname = name
+        if self.verbose_name is None and self.name:
+            self.verbose_name = self.name.replace('_', ' ')
         # Only add the subfields for non-abstract models and use the model
         # attribute to detect non-abstract inheritance. Without this check
         # the subfields would be added multiple times.
@@ -75,7 +77,8 @@ class CompositeField(object, metaclass=CompositeFieldBase):
         else:
             cls._meta.add_field(self, private=True)
 
-    def __init__(self, prefix=None, default=None):
+    def __init__(self, prefix=None, default=None, verbose_name=None):
+        self.verbose_name = verbose_name
         self.default = default or {}
         self.prefix = prefix
         self.model = None
