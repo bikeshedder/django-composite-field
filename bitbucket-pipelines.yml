@@ -1,6 +1,6 @@
 # Bitbucket pipelines configuration to run the tox tests
 # (See https://confluence.atlassian.com/x/VYk8Lw)
-image: ubuntu:19.04
+image: ubuntu:18.04
 
 pipelines:
   default:
