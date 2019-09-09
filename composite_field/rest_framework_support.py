@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+
+from .base import CompositeField
 
 
 class CompositeFieldSerializer(serializers.Field):
@@ -9,6 +12,10 @@ class CompositeFieldSerializer(serializers.Field):
     def to_internal_value(self, data):
         # FIXME add validation of max_length parameter
         return data
+
+
+# Make CompositeFieldSerializer the default serializer for CompositeField
+ModelSerializer.serializer_field_mapping[CompositeField] = CompositeFieldSerializer
 
 
 class CompositeFieldModelSerializerMixin(object):
