@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from setuptools import Command
-from setuptools import setup
+from setuptools import Command, setup
 
 def read(*p):
     '''Utility function to read files relative to the project root'''
@@ -57,6 +56,11 @@ setup(
     url='http://bitbucket.org/bikeshedder/django-composite-field',
     packages=['composite_field'],
     tests_require=['Django'],
+    setup_requires=[
+        'setuptools_git',
+        'wheel',
+        'twine',
+    ],
     cmdclass={
         'test': DjangoTestCommand,
     },
