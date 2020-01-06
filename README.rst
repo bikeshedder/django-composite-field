@@ -35,8 +35,8 @@ makes it possible to assign more than one property at once.
 
 There are some more examples in the included tests.py.
 
-.. |Build Status| image:: http://img.shields.io/travis/ninemoreminutes/django-crum.svg
-   :target: https://travis-ci.org/ninemoreminutes/django-crum
+.. |Build Status| image:: http://img.shields.io/bitbucket/pipelines/bikeshedder/django-composite-field.svg
+   :target: https://bitbucket.org/bikeshedder/django-composite-field/addon/pipelines/home
 .. |PyPI Version| image:: https://img.shields.io/pypi/v/django-composite-field.svg
    :target: https://pypi.python.org/pypi/django-composite-field/
 .. |PyPI License| image:: https://img.shields.io/pypi/l/django-composite-field.svg
