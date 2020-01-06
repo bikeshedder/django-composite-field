@@ -6,7 +6,6 @@ import django.test
 from django.test import TestCase
 from django.utils import translation
 from django.utils.encoding import force_text
-import six
 
 from composite_field_test.models import Place
 from composite_field_test.models import PlaceWithDefaultCoord
@@ -236,9 +235,9 @@ class LocalizedFieldTestCase(TestCase):
             foo.save()
             foo2 = LocalizedFoo.objects.raw('SELECT * FROM composite_field_test_localizedfoo')[0]
             with translation.override('de'):
-                self.assertEqual(six.text_type(foo2.name), 'Antwort')
+                self.assertEqual(str(foo2.name), 'Antwort')
             with translation.override('en'):
-                self.assertEqual(six.text_type(foo2.name), 'answer')
+                self.assertEqual(str(foo2.name), 'answer')
         finally:
             foo.delete()
 
@@ -397,7 +396,7 @@ class AdminTestCase(django.test.TestCase):
         response = self.client.post('/admin/composite_field_test/direction/add/', {
             'source_x': '0.25',
             'source_y': '0.5',
-            'distance': six.text_type(math.sqrt(2.0)),
+            'distance': str(math.sqrt(2.0)),
             'target_x': '1.25',
             'target_y': '1.5',
         })
@@ -417,7 +416,7 @@ class AdminTestCase(django.test.TestCase):
         response = self.client.post('/admin/composite_field_test/direction/1/change/', {
             'source_x': '0.5',
             'source_y': '0.75',
-            'distance': six.text_type(math.sqrt(2.0)/2.0),
+            'distance': str(math.sqrt(2.0)/2.0),
             'target_x': '1.0',
             'target_y': '1.25',
         })

@@ -2,12 +2,9 @@ from copy import deepcopy
 
 from django.conf import settings
 from django.db import models
-from django.utils import six
 from django.utils import translation
 from django.utils.functional import lazy
 from django.utils.translation import get_language
-from django.utils.encoding import python_2_unicode_compatible
-import six
 
 from .base import CompositeField
 
@@ -33,7 +30,7 @@ class LocalizedField(CompositeField):
         for language in self:
             # verbose_name must be lazy in order for the admin to show the
             # translated verbose_names of the fields
-            self[language].verbose_name = lazy(lambda language: self.verbose_name + ' (' + language + ')', six.text_type)(language)
+            self[language].verbose_name = lazy(lambda language: self.verbose_name + ' (' + language + ')', str)(language)
         super(LocalizedField, self).contribute_to_class(cls, field_name)
 
     def get_col(self, alias, output_field=None):
@@ -65,11 +62,10 @@ class LocalizedField(CompositeField):
             d = {}
             for language in self:
                 with translation.override(language):
-                    d[language] = six.text_type(value)
+                    d[language] = str(value)
             value = d
         return super(LocalizedField, self).set(model, value)
 
-    @python_2_unicode_compatible
     class Proxy(CompositeField.Proxy):
 
         def __bool__(self):
@@ -80,7 +76,7 @@ class LocalizedField(CompositeField):
             # the localized field with a non-string Field. e.g.
             # LocalizedField(IntegerField) is possilbe and would result
             # in an error if leaving out the text_type(...) call.
-            return six.text_type(self.current_with_fallback)
+            return str(self.current_with_fallback)
 
         def __setattr__(self, name, value):
             if name == 'current':

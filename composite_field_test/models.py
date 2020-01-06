@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from composite_field import CompositeField
 from composite_field import LocalizedCharField
@@ -32,7 +31,6 @@ class Direction(models.Model):
     target = CoordField()
 
 
-@python_2_unicode_compatible
 class LocalizedFoo(models.Model):
     id = models.AutoField(primary_key=True)
     name = LocalizedCharField(languages=('de', 'en'), max_length=50)

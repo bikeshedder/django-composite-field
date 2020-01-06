@@ -2,7 +2,6 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.db.models.fields import Field
-from django.utils import six
 
 
 class CompositeFieldBase(type):
@@ -28,8 +27,7 @@ class CompositeFieldBase(type):
         return new_class
 
 
-@six.add_metaclass(CompositeFieldBase)
-class CompositeField(object):
+class CompositeField(object, metaclass=CompositeFieldBase):
     is_relation = False
     concrete = False
     column = None
@@ -64,7 +62,7 @@ class CompositeField(object):
             self.model = cls
             if self.prefix is None:
                 self.prefix = '%s_' % name
-            for subfield_name, subfield in six.iteritems(self.subfields):
+            for subfield_name, subfield in self.subfields.items():
                 subfield_name = self.prefix + subfield_name
                 subfield.contribute_to_class(cls, subfield_name)
             setattr(cls, name, property(self.get, self.set))
@@ -84,10 +82,10 @@ class CompositeField(object):
         self.subfields = deepcopy(self.subfields)
         self.creation_counter = Field.creation_counter
         Field.creation_counter += 1
-        for subfield in six.itervalues(self.subfields):
+        for subfield in self.subfields.values():
             subfield.creation_counter = Field.creation_counter
             Field.creation_counter += 1
-        for name, value in six.iteritems(self.default):
+        for name, value in self.default.items():
             self.subfields[name].default = value
 
     def __getitem__(self, name):
@@ -100,7 +98,7 @@ class CompositeField(object):
         return name in self.subfields
 
     def __iter__(self):
-        return six.iterkeys(self.subfields)
+        return iter(self.subfields.keys())
 
     def __eq__(self, other):
         if isinstance(other, (CompositeField, Field)):
