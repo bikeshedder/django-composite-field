@@ -11,6 +11,6 @@ pipelines:
             - add-apt-repository ppa:deadsnakes/ppa
             - apt-get update
             - apt-get install -y python3.4 python3.5 python3.6 python3.7 python3.8 virtualenv
-            - virtualenv /opt/venv
+            - python3 -m venv /opt/venv
             - /opt/venv/bin/pip install tox
             - /opt/venv/bin/tox
