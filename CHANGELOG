@@ -81,7 +81,7 @@ Version 0.7.6, 2016-07-01
   * Add help_text, choices and max_length proxy properties
   * Add support for assigning ugettext_lazy to localized fields
 
-Version 0.8.0, unreleased
+Version 0.8.0, 2017-03-02
 -------------------------
 
  * Drop support for Python 3.2 and 3.3
@@ -92,3 +92,30 @@ Version 0.8.0, unreleased
  * Drop support for Django < 1.8
  * Add docker configuration for running the tests
  * Add bitbucket-pipeline to run tests on push
+
+Version 0.8.1, 2017-10-14
+-------------------------
+
+ * Make it simpler to provide a custom proxy
+ * Fix Python 2.7 compatibility for bool(LocalizedField)
+ * Add test for custom Proxy with __bool__()
+
+Version 0.9.0, 2017-12-22
+-------------------------
+
+ * Fix Django 2.0 private field
+ * Add Python 2.6 support
+ * Fix test_settings for Django 2.0
+
+Version 0.9.1, 2019-04-09
+-------------------------
+
+ * Add Python 3.6 and 3,7 support
+ * Fix Django 2.2 support
+
+
+Version 1.0.0, 2020-01-06
+-------------------------
+
+ * Remove Python 2 support
+ * Add Django 3.0 support
