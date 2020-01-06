@@ -1,7 +1,7 @@
 default: dist
 
 clean:
-	rm -rf build dinbrief.egg-info dist .tox
+	rm -rf build django_composite_field.egg-info dist .tox
 
 sdist:
 	python setup.py sdist
