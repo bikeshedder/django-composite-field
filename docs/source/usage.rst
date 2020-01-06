@@ -1,9 +1,9 @@
 .. _example:
 
-Example
-=======
+Usage
+=====
 
-Model definition
+Example
 ----------------
 
 .. code-block:: python
@@ -15,11 +15,6 @@ Model definition
     class Place(models.Model):
         name = models.CharField(max_length=10)
         coord = CoordField()
-
-Usage
------
-
-.. code-block:: python
 
     p = Place(name='Foo', coord_x=42, coord_y=0)
     q = Place(name='Foo', coord=p.coord)

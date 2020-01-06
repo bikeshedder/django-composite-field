@@ -12,10 +12,11 @@ can be used to group fields together and reuse their definitions.
 .. toctree::
     :maxdepth: 2
 
-    example.rst
-    tests.rst
     install.rst
+    usage.rst
+    examples.rst
     faq.rst
+    changelog.rst
     license.rst
 
 Indices and tables

@@ -1,7 +1,10 @@
 .. _tests
 
-Tests (more examples)
-=====================
+Examples
+========
+
+The following code is part of the unit tests and should be mostly
+self explaining.
 
 models.py
 ---------
