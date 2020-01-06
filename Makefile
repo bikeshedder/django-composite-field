@@ -11,7 +11,5 @@ bdist_wheel:
 
 dist: clean sdist bdist_wheel
 
-upload:
-	twine upload dist/*
-
-release: dist upload
+upload: dist
+	python setup.py sdist bdist_wheel upload
