@@ -11,6 +11,7 @@
 [Tt]humbs.db
 
 # editor files
+.vscode
 *.swp
 *.orig
 *~
@@ -20,6 +21,9 @@
 # Old files and backup stuff
 *.old
 *.bak
+
+# virtual environment
+.venv
 
 # build
 /.eggs
