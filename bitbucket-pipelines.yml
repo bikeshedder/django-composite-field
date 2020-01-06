@@ -10,7 +10,7 @@ pipelines:
             - apt-get install -y apt-utils software-properties-common
             - add-apt-repository ppa:deadsnakes/ppa
             - apt-get update
-            - apt-get install -y python python2.7 python3.2 python3.3 python3.4 python3.5 python3.6 python3.7 virtualenv
+            - apt-get install -y python3.4 python3.5 python3.6 python3.7 python3.8 virtualenv
             - virtualenv /opt/venv
             - /opt/venv/bin/pip install tox
             - /opt/venv/bin/tox
