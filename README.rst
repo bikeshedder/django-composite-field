@@ -33,7 +33,7 @@ above ``p.coord`` returns a proxy object that maps the fields ``x`` and ``y``
 to the model fields ``coord_x`` and ``coord_y``. The proxy object also
 makes it possible to assign more than one property at once.
 
-There are some more examples in the included tests.py.
+Documentation can be found at `RTFD <http://django-composite-field.readthedocs.io/>`_.
 
 .. |Build Status| image:: http://img.shields.io/bitbucket/pipelines/bikeshedder/django-composite-field.svg
    :target: https://bitbucket.org/bikeshedder/django-composite-field/addon/pipelines/home
