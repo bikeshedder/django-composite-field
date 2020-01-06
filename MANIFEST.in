@@ -1,7 +1,0 @@
-include AUTHORS
-include CHANGELOG
-include INSTALL
-include LICENSE
-include MANIFEST.in
-include README
-recursive-include docs *
