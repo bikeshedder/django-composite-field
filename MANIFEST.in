@@ -1,0 +1,2 @@
+include docs/Makefile
+include-recursive docs/source *
