@@ -35,8 +35,8 @@ makes it possible to assign more than one property at once.
 
 Documentation can be found at `RTFD <http://django-composite-field.readthedocs.io/>`_.
 
-.. |Build Status| image:: http://img.shields.io/bitbucket/pipelines/bikeshedder/django-composite-field.svg
-   :target: https://bitbucket.org/bikeshedder/django-composite-field/addon/pipelines/home
+.. |Build Status| image:: https://img.shields.io/github/workflow/status/bikeshedder/django-composite-field/Python%20package
+   :target: https://github.com/bikeshedder/django-composite-field/actions?query=workflow%3A%22Python+package%22
 .. |PyPI Version| image:: https://img.shields.io/pypi/v/django-composite-field.svg
    :target: https://pypi.python.org/pypi/django-composite-field/
 .. |PyPI License| image:: https://img.shields.io/pypi/l/django-composite-field.svg
