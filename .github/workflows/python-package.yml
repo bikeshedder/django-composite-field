@@ -14,6 +14,9 @@ jobs:
 
     runs-on: ubuntu-18.04
 
+    env:
+      PATH: $PATH:$HOME/.local/bin
+
     steps:
     - uses: actions/checkout@v2
     - name: Installing deadsnakes
