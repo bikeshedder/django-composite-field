@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from django.conf import settings
 from django.db import models
 from django.utils import translation
@@ -9,7 +7,7 @@ from django.utils.translation import get_language
 from .base import CompositeField
 
 
-LANGUAGES = [l[0] for l in getattr(settings, 'LANGUAGES', [])]
+LANGUAGES = [lang[0] for lang in getattr(settings, 'LANGUAGES', [])]
 
 
 class LocalizedField(CompositeField):
@@ -17,7 +15,10 @@ class LocalizedField(CompositeField):
     def __init__(self, field_class, verbose_name=None, *args, **kwargs):
         self.languages = kwargs.pop('languages', LANGUAGES)
         if not self.languages:
-            raise RuntimeError('Set LANGUAGES in your settings.py or pass a non empty "languages" argument before using LocalizedCharField')
+            raise RuntimeError(
+                'Set LANGUAGES in your settings.py or pass a non empty '
+                '"languages" argument before using LocalizedCharField'
+            )
         super(LocalizedField, self).__init__()
         self.verbose_name = verbose_name
         kwargs['verbose_name'] = verbose_name

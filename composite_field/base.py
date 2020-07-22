@@ -31,9 +31,9 @@ class CompositeField(object, metaclass=CompositeFieldBase):
     is_relation = False
     concrete = False
     column = None
-    rel = None # Django<=1.9
-    remote_field = None # Django>=1.9
-    unique = False # Django>=2.2
+    rel = None  # Django<=1.9
+    remote_field = None  # Django>=1.9
+    unique = False  # Django>=2.2
     auto_created = False
     editable = False
     serialize = False
@@ -129,7 +129,6 @@ class CompositeField(object, metaclass=CompositeFieldBase):
         return value
 
     def formfield(self, form):
-        from django.forms import MultiValueField
         from django import forms
         return forms.CharField()
 
@@ -178,7 +177,7 @@ class CompositeField(object, metaclass=CompositeFieldBase):
         def __repr__(self):
             fields = ', '.join(
                 '%s=%r' % (name, getattr(self, name))
-                        for name in self._composite_field
+                for name in self._composite_field
             )
             return '%s(%s)' % (self._composite_field.__class__.__name__, fields)
 

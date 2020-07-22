@@ -28,7 +28,7 @@ class CompositeFieldModelSerializerMixin(object):
             field_kwargs = {}
             return field_class, field_kwargs
         return super(CompositeFieldModelSerializerMixin, self) \
-                .build_property_field(field_name, model_class)
+            .build_property_field(field_name, model_class)
 
 
 class ModelSerializer(CompositeFieldModelSerializerMixin, serializers.ModelSerializer):

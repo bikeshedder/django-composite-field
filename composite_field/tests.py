@@ -17,7 +17,6 @@ from composite_field_test.models import Direction
 from composite_field_test.models import LocalizedFoo
 from composite_field_test.models import ComplexTuple
 from composite_field_test.models import ComplexTupleWithDefaults
-from composite_field_test.models import TranslatedAbstractBase
 from composite_field_test.models import TranslatedModelA
 from composite_field_test.models import TranslatedModelB
 from composite_field_test.models import TranslatedNonAbstractBase
@@ -80,6 +79,7 @@ class CompositeFieldTestCase(TestCase):
 
     def test_modelform(self):
         from django import forms
+
         class DirectionForm(forms.ModelForm):
             class Meta:
                 model = Direction
@@ -90,6 +90,7 @@ class CompositeFieldTestCase(TestCase):
 
     def test_modelform_with_exclude(self):
         from django import forms
+
         class LocalizedFooForm(forms.ModelForm):
             class Meta:
                 model = LocalizedFoo
@@ -105,6 +106,7 @@ class CompositeFieldTestCase(TestCase):
 
     def test_modelform_with_fields(self):
         from django import forms
+
         class LocalizedFooForm(forms.ModelForm):
             class Meta:
                 model = LocalizedFoo
@@ -162,6 +164,7 @@ class LocalizedFieldTestCase(TestCase):
     def test_verbose_name(self):
         foo = LocalizedFoo()
         get_field = foo._meta.get_field
+        self.assertEqual(force_text(get_field('name').verbose_name), 'name')
         self.assertEqual(force_text(get_field('name_de').verbose_name), 'name (de)')
         self.assertEqual(force_text(get_field('name_en').verbose_name), 'name (en)')
 
@@ -186,11 +189,6 @@ class LocalizedFieldTestCase(TestCase):
         foo.name.all = 'Felix'
         self.assertEqual(foo.name_de, 'Felix')
         self.assertEqual(foo.name_en, 'Felix')
-
-    def test_verbose_name(self):
-        foo = LocalizedFoo()
-        get_field = foo._meta.get_field
-        self.assertEqual(force_text(get_field('name').verbose_name), 'name')
 
     def test_filter(self):
         foo1 = LocalizedFoo(name_de='eins', name_en='one')
@@ -232,7 +230,11 @@ class LocalizedFieldTestCase(TestCase):
             foo1.delete()
             foo2.delete()
 
-    @unittest.skipIf((1, 8) <= django.VERSION < (1, 10), 'Django introduced a infinite recursion bug for properties of deferred models that was fixed in Django 1.10')
+    @unittest.skipIf(
+        (1, 8) <= django.VERSION < (1, 10),
+        'Django introduced a infinite recursion bug for '
+        'properties of deferred models that was fixed in Django 1.10'
+    )
     def test_raw_sql(self):
         foo = LocalizedFoo(name_de='Antwort', name_en='answer')
         try:
@@ -250,6 +252,7 @@ class LocalizedFieldTestCase(TestCase):
         self.assertFalse(foo.name)
         foo.name_de = 'test'
         self.assertTrue(foo.name)
+
 
 class ComplexFieldTestCase(TestCase):
 

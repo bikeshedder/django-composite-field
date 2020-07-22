@@ -3,9 +3,18 @@
 import os
 from setuptools import Command, setup
 
+# Prevent "TypeError: 'NoneType' object is not callable" when running tests.
+# (http://www.eby-sarna.com/pipermail/peak/2010-May/003357.html)
+try:
+    import multiprocessing  # noqa: F401
+except ImportError:
+    pass
+
+
 def read(*p):
     '''Utility function to read files relative to the project root'''
     return open(os.path.join(os.path.dirname(__file__), *p)).read()
+
 
 def get_version():
     '''Get __version__ information from __init__.py without importing it'''
@@ -18,12 +27,6 @@ def get_version():
     else:
         raise RuntimeError('Could not get __version__ from composite_field/__init__.py')
 
-# Prevent "TypeError: 'NoneType' object is not callable" when running tests.
-# (http://www.eby-sarna.com/pipermail/peak/2010-May/003357.html)
-try:
-    import multiprocessing
-except ImportError:
-    pass
 
 class DjangoTestCommand(Command):
     description = "run unit test using Django management command"
@@ -37,12 +40,14 @@ class DjangoTestCommand(Command):
 
     def run(self):
         # Prepare DJANGO_SETTINGS_MODULE and PYTHONPATH
-        import os, sys
+        import os
+        import sys
         os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
         sys.path[0:0] = [os.path.dirname(os.path.dirname(__file__))]
         # Execute management command 'test'
         from django.core.management import execute_from_command_line
         execute_from_command_line(['manage.py', 'test'])
+
 
 setup(
     name='django-composite-field',
