@@ -58,7 +58,7 @@ setup(
     author_email='michael.jung@terreon.de',
     license='BSD',
     keywords='django composite field',
-    url='http://bitbucket.org/bikeshedder/django-composite-field',
+    url='https://github.com/bikeshedder/django-composite-field',
     packages=['composite_field'],
     tests_require=['Django'],
     setup_requires=[
