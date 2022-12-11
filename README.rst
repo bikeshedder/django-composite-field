@@ -1,4 +1,4 @@
-|Build Status| |PyPI Version| |PyPI License| |Python Versions| |Django Versions| |Read the Docs|
+|Build Status| |PyPI Version| |PyPI License| |Python Versions| |Django Versions| |Read the Docs| |Code Shelter|
 
 CompositeField for Django Models
 ================================
@@ -47,4 +47,5 @@ Documentation can be found at `RTFD <http://django-composite-field.readthedocs.i
    :target: https://pypi.org/project/django-composite-field/
 .. |Read the Docs| image:: https://img.shields.io/readthedocs/django-composite-field.svg
    :target: http://django-composite-field.readthedocs.io/
-
+.. |Code Shelter| image:: https://www.codeshelter.co/static/badges/badge-flat.svg
+   :target: https://www.codeshelter.co/
