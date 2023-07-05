@@ -113,6 +113,11 @@ class CompositeField(object, metaclass=CompositeFieldBase):
             return self.creation_counter < other.creation_counter
         return NotImplemented
 
+    def __gt__(self, other):
+        if isinstance(other, (CompositeField, Field)):
+            return self.creation_counter > other.creation_counter
+        return NotImplemented
+
     def __hash__(self):
         return hash(self.creation_counter)
 
