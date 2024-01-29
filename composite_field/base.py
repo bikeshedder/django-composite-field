@@ -50,6 +50,7 @@ class CompositeField(object, metaclass=CompositeFieldBase):
     one_to_many = None
     one_to_one = None
     related_model = None
+    generated = False
 
     def contribute_to_class(self, cls, name):
         self.name = name
