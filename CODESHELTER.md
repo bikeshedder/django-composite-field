@@ -8,10 +8,9 @@ as I'm not actively using it myself.
 I was asked to [reduce the bus factor](https://github.com/bikeshedder/django-composite-field/issues/1#issuecomment-1344934071).
 This sounds like a sensible request. So here we are. 👍
 
-As of today (2022-12-11) there are no known bugs and it should be compatible
-with all Django versions. It used to break every time Django added a new
-field to the `django.db.models.fields.Field` class but that last happened
-in 2019.
+As of today (2024-02-01) there are no known bugs and it should be compatible
+with all Python and Django versions which are not end of life. It breaks every
+time Django adds a new field to the `django.db.models.fields.Field` class.
 
 I don't use Django and this project as much as I used to. It would be
 great if someone has a sharp eye on it and checks if upcoming
