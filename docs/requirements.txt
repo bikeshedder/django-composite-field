@@ -1,1 +1,2 @@
 Django
+myst-parser>=2,<3
