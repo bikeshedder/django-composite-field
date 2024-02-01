@@ -8,6 +8,8 @@ Example
 
 .. code-block:: python
 
+    from composite_field import CompositeField
+
     class CoordField(CompositeField):
         x = models.FloatField()
         y = models.FloatField()
