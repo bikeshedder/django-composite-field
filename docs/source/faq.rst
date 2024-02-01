@@ -6,14 +6,17 @@ FAQ
 Which Python versions are supported?
 ------------------------------------
 
-It supports Python 3.4, 3.5, 3.6, 3.7 and 3.8.
+It supports Python 3.8 and upwards.
 
 The last version to support Python 2.7 is ``django-composite-field ==0.9.1``.
+The last version to support Python 3.4-3.7 is ``django-composite-field ==1.1.0``.
 
 Which Django versions are supported?
 ------------------------------------
 
-It supports Django 1.8, 1.9, 1.10, 1.11, 2.0, 2.1, 2.2 and 3.0.
+It supports Django 3.2 and upwards.
+
+The last version to support Django 1.8-3.1 is ``django-composite-field==1.1.0``.
 
 Can I get commercial support?
 -----------------------------
