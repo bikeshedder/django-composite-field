@@ -31,9 +31,8 @@ class CompositeField(object, metaclass=CompositeFieldBase):
     is_relation = False
     concrete = False
     column = None
-    rel = None  # Django<=1.9
-    remote_field = None  # Django>=1.9
-    unique = False  # Django>=2.2
+    remote_field = None
+    unique = False
     auto_created = False
     editable = False
     serialize = False
@@ -69,14 +68,7 @@ class CompositeField(object, metaclass=CompositeFieldBase):
                 subfield_name = self.prefix + subfield_name
                 subfield.contribute_to_class(cls, subfield_name)
             setattr(cls, name, property(self.get, self.set))
-        if hasattr(cls._meta, 'add_virtual_field'):
-            # Django < 1.8
-            cls._meta.add_virtual_field(self)
-        elif hasattr(cls._meta, 'virtual_fields'):
-            # Django < 2.0
-            cls._meta.add_field(self, virtual=True)
-        else:
-            cls._meta.add_field(self, private=True)
+        cls._meta.add_field(self, private=True)
 
     def __init__(self, prefix=None, default=None, verbose_name=None):
         self.verbose_name = verbose_name

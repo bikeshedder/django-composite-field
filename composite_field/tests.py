@@ -9,7 +9,6 @@ try:
 except ImportError:
     from django.core.urlresolvers import reverse
 from django.utils import translation
-from django.utils.encoding import force_text
 
 from composite_field_test.models import Place
 from composite_field_test.models import PlaceWithDefaultCoord
@@ -101,8 +100,8 @@ class CompositeFieldTestCase(TestCase):
         form = LocalizedFooForm({'name_de': 'Banane', 'name_en': 'Banana'})
         self.assertTrue(form.is_valid())
         foo = form.save(commit=False)
-        self.assertEquals(foo.name.de, 'Banane')
-        self.assertEquals(foo.name.en, 'Banana')
+        self.assertEqual(foo.name.de, 'Banane')
+        self.assertEqual(foo.name.en, 'Banana')
 
     def test_modelform_with_fields(self):
         from django import forms
@@ -117,8 +116,8 @@ class CompositeFieldTestCase(TestCase):
         form = LocalizedFooForm({'name_de': 'Banane', 'name_en': 'Banana'})
         self.assertTrue(form.is_valid())
         foo = form.save(commit=False)
-        self.assertEquals(foo.name.de, 'Banane')
-        self.assertEquals(foo.name.en, 'Banana')
+        self.assertEqual(foo.name.de, 'Banane')
+        self.assertEqual(foo.name.en, 'Banana')
 
     def test_full_clean(self):
         place = Place(name='Answer', coord_x=12.0, coord_y=42.0)
@@ -164,9 +163,9 @@ class LocalizedFieldTestCase(TestCase):
     def test_verbose_name(self):
         foo = LocalizedFoo()
         get_field = foo._meta.get_field
-        self.assertEqual(force_text(get_field('name').verbose_name), 'name')
-        self.assertEqual(force_text(get_field('name_de').verbose_name), 'name (de)')
-        self.assertEqual(force_text(get_field('name_en').verbose_name), 'name (en)')
+        self.assertEqual(str(get_field('name').verbose_name), 'name')
+        self.assertEqual(str(get_field('name_de').verbose_name), 'name (de)')
+        self.assertEqual(str(get_field('name_en').verbose_name), 'name (en)')
 
     def test_get_current(self):
         foo = LocalizedFoo(name_de='Bier', name_en='Beer')
@@ -230,11 +229,6 @@ class LocalizedFieldTestCase(TestCase):
             foo1.delete()
             foo2.delete()
 
-    @unittest.skipIf(
-        (1, 8) <= django.VERSION < (1, 10),
-        'Django introduced a infinite recursion bug for '
-        'properties of deferred models that was fixed in Django 1.10'
-    )
     def test_raw_sql(self):
         foo = LocalizedFoo(name_de='Antwort', name_en='answer')
         try:
@@ -379,27 +373,25 @@ class AdminTestCase(django.test.TestCase):
         self.client.login(username='john.doe', password='xxx12345')
         self.client.get('/admin/')
 
-    @unittest.skipIf(django.VERSION < (1, 9), 'the admin URLs are slightly different in django 1.9+')
     def test_translated_model_a(self):
         self.client.login(username='john.doe', password='xxx12345')
         response = self.client.get('/admin/composite_field_test/translatedmodela/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/admin/composite_field_test/translatedmodela/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         obj = TranslatedModelA.objects.create(name_de='Foo', name_en='Foo')
         response = self.client.get('/admin/composite_field_test/translatedmodela/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/admin/composite_field_test/translatedmodela/%s/change/' % obj.pk)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/admin/composite_field_test/translatedmodela/%s/delete/' % obj.pk)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
-    @unittest.skipIf(django.VERSION < (1, 9), 'the admin URLs are slightly different in django 1.9+')
     def test_crud_direction(self):
         self.client.login(username='john.doe', password='xxx12345')
         # create
         response = self.client.get('/admin/composite_field_test/direction/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post('/admin/composite_field_test/direction/add/', {
             'source_x': '0.25',
             'source_y': '0.5',
@@ -408,17 +400,17 @@ class AdminTestCase(django.test.TestCase):
             'target_y': '1.5',
         })
         direction = Direction.objects.get()
-        self.assertEquals(direction.source_x, 0.25)
-        self.assertEquals(direction.source_y, 0.5)
-        self.assertAlmostEquals(direction.distance, math.sqrt(2))
-        self.assertEquals(direction.target_x, 1.25)
-        self.assertEquals(direction.target_y, 1.5)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(direction.source_x, 0.25)
+        self.assertEqual(direction.source_y, 0.5)
+        self.assertAlmostEqual(direction.distance, math.sqrt(2))
+        self.assertEqual(direction.target_x, 1.25)
+        self.assertEqual(direction.target_y, 1.5)
+        self.assertEqual(response.status_code, 302)
         # read
         response = self.client.get('/admin/composite_field_test/direction/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/admin/composite_field_test/direction/1/change/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         # update
         response = self.client.post('/admin/composite_field_test/direction/1/change/', {
             'source_x': '0.5',
@@ -428,19 +420,19 @@ class AdminTestCase(django.test.TestCase):
             'target_y': '1.25',
         })
         direction = Direction.objects.get()
-        self.assertEquals(direction.source_x, 0.5)
-        self.assertEquals(direction.source_y, 0.75)
-        self.assertAlmostEquals(direction.distance, math.sqrt(2)/2.0)
-        self.assertEquals(direction.target_x, 1.0)
-        self.assertEquals(direction.target_y, 1.25)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(direction.source_x, 0.5)
+        self.assertEqual(direction.source_y, 0.75)
+        self.assertAlmostEqual(direction.distance, math.sqrt(2)/2.0)
+        self.assertEqual(direction.target_x, 1.0)
+        self.assertEqual(direction.target_y, 1.25)
+        self.assertEqual(response.status_code, 302)
         # delete
         response = self.client.get('/admin/composite_field_test/direction/1/delete/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post('/admin/composite_field_test/direction/1/delete/', {
             'post': 'yes',
         })
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_readonly(self):
         self.client.login(username='john.doe', password='xxx12345')
@@ -448,4 +440,4 @@ class AdminTestCase(django.test.TestCase):
         place = PlaceWithDefaultCoord.objects.create()
 
         response = self.client.get(reverse('admin:composite_field_test_placewithdefaultcoord_change', args=(place.id,)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)

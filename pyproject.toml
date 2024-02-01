@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "django-composite-field"
+version = "2.0.0"
+authors = ["Michael P. Jung <michael.jung@terreon.de>"]
+license = "BSD OR MIT OR Apache-2.0"
+readme = "README.md"
+description = "CompositeField implementation for Django"
+repository = "https://github.com/bikeshedder/django-composite-field"
+homepage = "https://github.com/bikeshedder/django-composite-field"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+packages = [
+    {include = "composite_field"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
