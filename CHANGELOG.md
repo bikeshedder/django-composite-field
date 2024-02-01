@@ -1,4 +1,4 @@
-# Version 2.0.0, unreleased
+# Version 2.0.0, 2024-02-01
 
 * Remove support for outdated Python and Django versions.
 * Add support for Django 5.0
