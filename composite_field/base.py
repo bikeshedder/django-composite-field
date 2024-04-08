@@ -66,6 +66,17 @@ class CompositeField(object, metaclass=CompositeFieldBase):
                 self.prefix = '%s_' % name
             for subfield_name, subfield in self.subfields.items():
                 subfield_name = self.prefix + subfield_name
+                verbose_name = subfield.verbose_name
+
+                # If verbose_name is a callable with a single positional
+                # argument or with a parent_verbose_name keyword parameter,
+                # call it with self.verbose_name and update it.
+                if callable(subfield.verbose_name):
+                    try:
+                        subfield.verbose_name = verbose_name(self.verbose_name)
+                    except TypeError:
+                        pass
+
                 subfield.contribute_to_class(cls, subfield_name)
             setattr(cls, name, property(self.get, self.set))
         cls._meta.add_field(self, private=True)
