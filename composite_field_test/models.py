@@ -7,7 +7,9 @@ from composite_field import ComplexField
 
 class CoordField(CompositeField):
     x = models.FloatField(null=True)
-    y = models.FloatField(null=True)
+    y = models.FloatField(
+        null=True, verbose_name=lambda parent_verbose_name: f"{parent_verbose_name} yyy"
+    )
 
     class Proxy(CompositeField.Proxy):
 
@@ -17,7 +19,7 @@ class CoordField(CompositeField):
 
 class Place(models.Model):
     name = models.CharField(max_length=10)
-    coord = CoordField()
+    coord = CoordField(verbose_name="coord_verbose")
 
 
 class PlaceWithDefaultCoord(models.Model):

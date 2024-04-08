@@ -149,12 +149,16 @@ class CompositeFieldTestCase(TestCase):
         place.coord = {'x': 0.0, 'y': 0.0}
         self.assertTrue(place.coord)
 
+    def test_parent_verbose_name(self):
+        get_field = Place._meta.get_field
+        self.assertEqual(str(get_field("coord_y").verbose_name), "coord_verbose yyy")
+
 
 class LocalizedFieldTestCase(TestCase):
-
     def test_general(self):
         foo = LocalizedFoo()
         self.assertEqual(len(LocalizedFoo._meta.fields), 4)
+
         foo.name_de = 'Mr.'
         foo.name_en = 'Herr'
         self.assertEqual(foo.name.de, 'Mr.')
