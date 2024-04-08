@@ -91,20 +91,18 @@ return a custom type. A good example for this is the included
 ``ComplexField`` which stores a ``complex`` number in two
 integer fields.
 
-When the ``verbose_name`` on a subfield is callable, it will be called
-with the parent field's ``verbose_name`` so that it can be dynamically set:
+When the ``verbose_name`` is set on a subfield, ``parent_verbose_name``
+will be substituted with the (default) verbose name from the parent field.
 
 .. code-block:: python
 
     class IntegerEstimatedRange(CompositeField):
         minimum = models.DurationField(
-            lambda n: _("%(parent_verbose_name)s minimum") % {
-                "parent_verbose_name": n
-            }
+            verbose_name=_("%(parent_verbose_name)s minimum")
         )
 
     class Species(models.Model):
-        height = IntegerEstimatedRange(verbose_name=_("plant height"))
+        height = IntegerEstimatedRange(verbose_name="plant height")
 
 This will render the verbose name as 'plant height minimum'. Translations
 and internationalisation will function as expected (e.g. in some locales
