@@ -1,3 +1,7 @@
+# Version 2.0.1, 2024-12-10
+
+* Add support for `%(parent_verbose_name)s` in `verbose_name`
+
 # Version 2.0.0, 2024-02-01
 
 * Remove support for outdated Python and Django versions.

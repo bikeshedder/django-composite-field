@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-composite-field"
-version = "2.0.0"
+version = "2.0.1"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 license = "BSD OR MIT OR Apache-2.0"
 readme = "README.md"
