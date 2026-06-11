@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.db.models.fields import Field
+from django.utils.functional import lazy, Promise
 
 
 class CompositeFieldBase(type):
@@ -71,9 +72,17 @@ class CompositeField(object, metaclass=CompositeFieldBase):
                     # If subfields have a verbose_name set, attempt substitution
                     # of parent_verbose_name.
 
-                    subfield.verbose_name = subfield.verbose_name % {
-                        "parent_verbose_name": self.verbose_name
-                    }
+                    if isinstance(subfield.verbose_name, Promise):
+                        # If the verbose_name is a lazy translation, we need to
+                        # make sure the substitution happens lazily as well.
+                        subfield.verbose_name = lazy(
+                            lambda v: v % {"parent_verbose_name": self.verbose_name},
+                            str,
+                        )(subfield.verbose_name)
+                    else:
+                        subfield.verbose_name = subfield.verbose_name % {
+                            "parent_verbose_name": self.verbose_name
+                        }
 
                 subfield.contribute_to_class(cls, subfield_name)
             setattr(cls, name, property(self.get, self.set))
